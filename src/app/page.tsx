@@ -5,6 +5,7 @@ import { profile } from "@/data/profile";
 import { useMemo, useEffect, useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import SocialIcon from "@/components/SocialIcon";
+import MouseTrackingOrbs from "@/components/MouseTrackingOrbs";
 
 /**
  * Home 页面组件
@@ -83,66 +84,8 @@ export default function Home() {
               style={{ y: bgTranslate, opacity: heroOpacity, scale: heroScale }} 
               className="pointer-events-none absolute inset-y-0 left-1/2 -translate-x-1/2 w-screen -z-10 opacity-80"
             >
-          <div className="absolute inset-0 bg-[radial-gradient(600px_200px_at_20%_0%,#7c3aed33,transparent),radial-gradient(500px_200px_at_80%_10%,#06b6d433,transparent)]" />
-          {/* 添加更多装饰光斑（循环动效 - 增强幅度） */}
-
-          <motion.div
-            initial={{ x: 0, y: 0, scale: 1 }}
-            animate={{
-              x: [0, 35, -25, 0],
-              y: [0, -30, 25, 0],
-              scale: [1, 1.08, 0.96, 1],
-            }}
-            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 0.8, repeatDelay: 1.2 }}
-            className="absolute top-[15%] right-[20%] w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 xl:w-72 xl:h-72 bg-gradient-to-br from-purple-400/12 to-blue-500/12 rounded-full blur-xl mix-blend-screen"
-          />
-          <motion.div
-            initial={{ x: 0, y: 0, scale: 1 }}
-            animate={{
-              x: [0, -30, 20, 0],
-              y: [0, 25, -20, 0],
-              scale: [1, 0.94, 1.06, 1],
-            }}
-            transition={{ duration: 18, repeat: Infinity, ease: "circInOut", delay: 1.5, repeatDelay: 0.8 }}
-            className="absolute bottom-[25%] left-[12%] w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 lg:w-60 lg:h-60 xl:w-64 xl:h-64 bg-gradient-to-tr from-cyan-400/10 to-violet-500/10 rounded-full blur-xl mix-blend-screen"
-          />
-          {/* 轻微闪烁的小光点（加位移动效） */}
-          <motion.div
-            initial={{ opacity: 0.25, scale: 0.9 }}
-            animate={{
-              opacity: [0.1, 0.4, 0.15, 0.1],
-              scale: [0.9, 1.12, 0.95, 0.9],
-              x: [0, 22, -18, 0],
-              y: [0, -18, 14, 0],
-            }}
-            transition={{ duration: 10, repeat: Infinity, ease: "circInOut", delay: 0.3, repeatDelay: 0.6 }}
-            className="absolute top-[38%] left-[55%] w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24 bg-gradient-to-tr from-white/4 to-white/0 rounded-full blur-md mix-blend-screen"
-          />
-
-          {/* 额外响应式光斑：在更大屏幕上逐步增加，颜色做微小差异 */}
-          {/* sm+：小型偏紫光斑 */}
-          <motion.div
-            className="hidden sm:block absolute top-[8%] left-[5%] w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 bg-gradient-to-tr from-fuchsia-400/8 to-purple-400/6 rounded-full blur-lg mix-blend-screen"
-            initial={{ x: 0, y: 0, scale: 1 }}
-            animate={{ x: [0, 22, -18, 0], y: [0, -18, 15, 0], scale: [1, 1.12, 0.94, 1] }}
-            transition={{ duration: 13, repeat: Infinity, ease: "backInOut", delay: 0.4, repeatDelay: 1.0 }}
-          />
-          {/* md+：青色系光斑 */}
-          <motion.div
-            className="hidden md:block absolute bottom-[12%] right-[15%] w-32 h-32 lg:w-36 lg:h-36 xl:w-40 xl:h-40 bg-gradient-to-tr from-sky-400/7 to-cyan-300/6 rounded-full blur-lg mix-blend-screen"
-            initial={{ x: 0, y: 0, scale: 1 }}
-            animate={{ x: [0, -28, 22, 0], y: [0, 24, -18, 0], scale: [1, 0.92, 1.18, 1] }}
-            transition={{ duration: 16, repeat: Infinity, ease: "anticipate", delay: 1.8, repeatDelay: 0.5 }}
-          />
-
-          {/* xl+：绿色系柔和光斑 */}
-          <motion.div
-            className="hidden xl:block absolute top-[3%] right-[45%] w-36 h-36 2xl:w-44 2xl:h-44 bg-gradient-to-tr from-emerald-300/6 to-teal-300/6 rounded-full blur-xl mix-blend-screen"
-            initial={{ x: 0, y: 0, scale: 1 }}
-            animate={{ x: [0, -32, 26, 0], y: [0, 28, -22, 0], scale: [1, 0.9, 1.16, 1] }}
-            transition={{ duration: 19, repeat: Infinity, ease: "easeInOut", delay: 1.0, repeatDelay: 0.9 }}
-          />
-        </motion.div>
+              <MouseTrackingOrbs />
+            </motion.div>
 
             {/* 主要内容区域 - 水平布局 */}
             <div className="w-full max-w-6xl flex flex-col md:flex-row items-start gap-8">
