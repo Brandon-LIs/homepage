@@ -357,11 +357,11 @@ export default function Home() {
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
           className="text-center mt-12"
         >
-          <Link
-            href="https://github.com/QQHKX"
-            target="_blank"
-            className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-white/20 backdrop-blur-sm hover:from-blue-500/30 hover:to-purple-500/30 hover:border-white/30 transition-all duration-300 group"
-          >
+            <Link
+              href="https://github.com/Brandon-LIs"
+              target="_blank"
+              className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-white/20 backdrop-blur-sm hover:from-blue-500/30 hover:to-purple-500/30 hover:border-white/30 transition-all duration-300 group"
+            >
             <span className="text-white/90 font-medium">查看更多项目</span>
             <svg className="w-5 h-5 text-white/60 group-hover:text-white/80 group-hover:translate-x-1 transition-all duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14" />
@@ -403,6 +403,10 @@ export default function Home() {
                 </Link>
               ))}
             </div>
+          </div>
+          <div className="mt-4 text-xs text-white/40 flex items-center gap-4">
+            <span>本站总访问量 <span id="busuanzi_site_pv">加载中...</span> 次</span>
+            <span>本站总访客数 <span id="busuanzi_site_uv">加载中...</span> 人</span>
           </div>
         </div>
       </footer>

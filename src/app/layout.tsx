@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import localFont from "next/font/local";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -47,6 +48,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${pacifico.variable} antialiased bg-background text-foreground`}
       >
         {children}
+        <Script src="https://bsz.oopss.top/busuanzi.min.js" strategy="afterInteractive" />
       </body>
     </html>
   );
