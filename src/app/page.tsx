@@ -418,6 +418,25 @@ export default function Home() {
               萌ICP备20262621号
             </a>
           </div>
+          <div className="mt-2 text-xs text-white/40 flex items-center justify-between gap-4">
+            <a
+              href="https://icp.redcha.cn/beian/ICP-2026070373.html"
+              title="茶ICP备2026070373号"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white/70 transition-colors duration-200 whitespace-nowrap"
+            >
+              茶ICP备2026070373号
+            </a>
+            <a
+              href="https://icp.6uu.us/query.php?icp_number=%E5%85%83-00688"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white/70 transition-colors duration-200 whitespace-nowrap"
+            >
+              元ICP备00688号
+            </a>
+          </div>
         </div>
       </footer>
         </motion.main>
