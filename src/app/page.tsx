@@ -408,6 +408,16 @@ export default function Home() {
             <span>本站总访问量 <span id="busuanzi_site_pv">加载中...</span> 次</span>
             <span>本站总访客数 <span id="busuanzi_site_uv">加载中...</span> 人</span>
           </div>
+          <div className="mt-4 text-center">
+            <a
+              href="https://icp.gov.moe/?keyword=20262621"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-white/40 hover:text-white/70 transition-colors duration-200"
+            >
+              萌ICP备20262621号
+            </a>
+          </div>
         </div>
       </footer>
         </motion.main>
