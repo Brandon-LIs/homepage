@@ -44,6 +44,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN">
+      <head>
+        <script
+          defer
+          src="https://jsd.oopss.top/tracker.min.js"
+          data-website-id="homepage"
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${pacifico.variable} antialiased bg-background text-foreground`}
       >
