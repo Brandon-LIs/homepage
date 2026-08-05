@@ -46,9 +46,11 @@ export default function RootLayout({
     <html lang="zh-CN">
       <head>
         <script
+          async
           defer
-          src="https://jsd.oopss.top/tracker.min.js"
-          data-website-id="homepage"
+          src="https://apis.oopss.top/script.js"
+          data-website-id="12b74a52-9a81-4e59-9e52-f424334e1916"
+          data-host-url="https://umami.oopss.top"
         />
       </head>
       <body
