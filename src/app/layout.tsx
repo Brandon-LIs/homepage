@@ -25,6 +25,11 @@ export const metadata: Metadata = {
   title: process.env.NEXT_PUBLIC_SITE_TITLE || "",
   description: process.env.NEXT_PUBLIC_SITE_DESCRIPTION || "",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
+  verification: {
+    other: {
+      "baidu-site-verification": "codeva-ZZuKffGjLt",
+    },
+  },
   icons: { 
     icon: process.env.NEXT_PUBLIC_FAVICON_PATH || "/favicon.ico",
     apple: process.env.NEXT_PUBLIC_APPLE_ICON_PATH || "/favicon.ico",
