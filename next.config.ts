@@ -11,14 +11,6 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: process.env.NEXT_PUBLIC_IMAGE_HOSTNAME || "localhost",
       },
-      {
-        protocol: "https",
-        hostname: "q.qlogo.cn",
-      },
-      {
-        protocol: "http",
-        hostname: "q.qlogo.cn",
-      },
     ],
   },
 };
