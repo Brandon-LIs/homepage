@@ -55,42 +55,6 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
       href={`${SITE.blog}/blog/rss.xml`}
     />
 
-    {/* 首屏纸纹是 CSS 背景图。浏览器要等 CSS 解析完才发现它，
-        用 media 限定条件预加载，只有当前真正会用到的那一份会被下载。 */}
-    <link
-      rel="preload"
-      as="image"
-      href="/textures/paper-sm.avif"
-      type="image/avif"
-      media="(prefers-color-scheme: light) and (max-width: 720px)"
-      fetchpriority="low"
-    />
-    <link
-      rel="preload"
-      as="image"
-      href="/textures/paper.avif"
-      type="image/avif"
-      media="(prefers-color-scheme: light) and (min-width: 721px)"
-      fetchpriority="low"
-    />
-    <link
-      rel="preload"
-      as="image"
-      href="/textures/screen-glow-sm.avif"
-      type="image/avif"
-      media="(prefers-color-scheme: dark) and (max-width: 720px)"
-      fetchpriority="low"
-    />
-    <link
-      rel="preload"
-      as="image"
-      href="/textures/screen-glow.avif"
-      type="image/avif"
-      media="(prefers-color-scheme: dark) and (min-width: 721px)"
-      fetchpriority="low"
-    />
-
-    {/* 标题字体是首屏最大的一个文件，提前握手并预载 */}
     <link rel="preload" as="font" type="font/woff2" href="/fonts/songti-700.woff2" crossorigin />
 
     <script is:inline>

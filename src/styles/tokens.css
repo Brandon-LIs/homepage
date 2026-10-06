@@ -120,7 +120,7 @@ ol[role="list"] {
      标题用宋体：笔锋分明、有书的质感。这与"现代几何无衬线"的 AI
      默认审美正好相反，也是这个页面性格的主要来源。中文子集化后自托管。
      正文仍用系统无衬线，保证长时间阅读的舒适度。 */
-  --font-sans: "Geist", system-ui, -apple-system, "PingFang SC",
+  --font-sans: system-ui, -apple-system, "PingFang SC",
     "HarmonyOS Sans SC", "Hiragino Sans GB", "Microsoft YaHei",
     "Noto Sans CJK SC", sans-serif;
   --font-display: "Songti", "Songti SC", "Noto Serif CJK SC",
