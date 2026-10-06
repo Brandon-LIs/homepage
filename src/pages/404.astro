@@ -1,0 +1,26 @@
+---
+import Base from "@/layouts/Base.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import { SITE } from "@/data/site";
+---
+
+<Base title={`页面不存在 · ${SITE.name}`}>
+  <SiteHeader />
+  <main id="main">
+    <section class="section notfound">
+      <div class="container">
+        <p class="notfound__code">404</p>
+        <h1 class="notfound__title">这个页面不存在</h1>
+        <p class="notfound__text">你要找的东西可能被移走了，或者地址打错了。</p>
+        <div class="hero__actions">
+          <a href="/" class="btn btn--primary">回到首页</a>
+          <a href={SITE.blog} target="_blank" rel="noopener" class="btn btn--ghost">
+            去博客看看
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <SiteFooter />
+</Base>

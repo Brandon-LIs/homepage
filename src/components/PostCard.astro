@@ -1,0 +1,48 @@
+---
+/** 与 scripts/fetch-posts.mjs 写出的 posts.json 结构一致。 */
+export interface Post {
+  title: string;
+  href: string;
+  date: string;
+  dateLabel: string;
+  summary: string;
+  cover: string;
+}
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+---
+
+<a
+  class="post"
+  href={post.href}
+  target="_blank"
+  rel="noopener"
+  aria-label={`${post.title}（在新标签页打开）`}
+>
+  <div class="post__cover">
+    {
+      post.cover ? (
+        <img
+          src={post.cover}
+          alt=""
+          width="600"
+          height="420"
+          class="post__img"
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <span class="post__cover-fallback" aria-hidden="true" />
+      )
+    }
+  </div>
+  <div class="post__text">
+    {post.dateLabel && <time class="post__date" datetime={post.date}>{post.dateLabel}</time>}
+    <h3 class="post__title">{post.title}</h3>
+    <p class="post__summary">{post.summary}</p>
+  </div>
+</a>

@@ -1,22 +1,30 @@
+# 依赖与构建产物
 node_modules
-.next
-out
-build
+dist
+.astro
+
+# 系统与编辑器
 .DS_Store
 *.pem
+*.tsbuildinfo
+
+# 日志
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-.env*
+pnpm-debug.log*
+
+# 环境变量
+.env
+.env.*
 !.env.example
+
+# Vercel
 .vercel
-*.tsbuildinfo
-next-env.d.ts
+
+# 生图的原图（每张 1-2 MB）。构建不需要，
+# 要重新生成时跑 scripts/process-images.py 即可。
+assets-raw/
 
 # 本地视觉核查产物
 shots/
-
-# 生图的原图（每张 1-2 MB）。构建不需要它们，
-# 需要重新生成时跑 scripts/process-images.py 即可。
-assets-raw/
+preview/

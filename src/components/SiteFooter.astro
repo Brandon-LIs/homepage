@@ -1,0 +1,105 @@
+---
+import { SITE, SOCIALS, BLOG_STATS } from "@/data/site";
+
+type FooterLink = { label: string; href: string; ext?: boolean };
+type FooterColumn = { title: string; links: FooterLink[] };
+
+const COLUMNS: FooterColumn[] = [
+  {
+    title: "本站",
+    links: [
+      { label: "关于我", href: "/#about" },
+      { label: "做过的项目", href: "/#work" },
+      { label: "最近写作", href: "/#writing" },
+      { label: "联系方式", href: "/#contact" },
+    ],
+  },
+  {
+    title: "去别处",
+    links: [
+      { label: "博客", href: SITE.blog, ext: true },
+      { label: "RSS 订阅", href: BLOG_STATS.rss, ext: true },
+      { label: "服务状态", href: SITE.status, ext: true },
+      { label: "站点地图", href: BLOG_STATS.sitemap, ext: true },
+    ],
+  },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div class="site-footer__brand">
+      <p class="site-footer__motto">{SITE.motto}</p>
+      <p class="site-footer__desc">
+        {SITE.name}。写代码，也写生活。
+      </p>
+    </div>
+
+    <nav class="site-footer__nav" aria-label="页脚导航">
+      {
+        COLUMNS.map((col) => (
+          <div class="site-footer__col">
+            <h2 class="site-footer__col-title">{col.title}</h2>
+            <ul role="list" class="site-footer__list">
+              {col.links.map((link) => (
+                <li>
+                  {link.ext ? (
+                    <a href={link.href} target="_blank" rel="noopener">
+                      {link.label}
+                    </a>
+                  ) : (
+                    <a href={link.href}>{link.label}</a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+
+      <div class="site-footer__col">
+        <h2 class="site-footer__col-title">保持联系</h2>
+        <ul role="list" class="site-footer__list">
+          {
+            SOCIALS.map((s) => (
+              <li>
+                <a
+                  href={s.href}
+                  {...(s.href.startsWith("http")
+                    ? { target: "_blank", rel: "noopener" }
+                    : {})}
+                >
+                  {s.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </nav>
+
+    <div class="site-footer__bottom">
+      <p>
+        © {year} {SITE.name} · 内容采用{" "}
+        <a href={SITE.license.href} target="_blank" rel="noopener">
+          {SITE.license.text}
+        </a>{" "}
+        许可
+      </p>
+      <p class="site-footer__icp">
+        {
+          SITE.icp.map((item, i) => (
+            <>
+              {i > 0 ? " · " : null}
+              <a href={item.href} target="_blank" rel="noopener">
+                {item.text}
+              </a>
+            </>
+          ))
+        }
+      </p>
+    </div>
+  </div>
+</footer>

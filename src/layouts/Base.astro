@@ -1,0 +1,137 @@
+---
+import { SITE } from "@/data/site";
+import "@/styles/fonts.css";
+import "@/styles/tokens.css";
+import "@/styles/base.css";
+import "@/styles/components.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = SITE.title,
+  description = SITE.description,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+---
+
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fbfaf8" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0a0e" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:url" content={SITE.url} />
+    <meta property="og:site_name" content={SITE.title} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={`${SITE.url}/og.png`} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${SITE.url}/og.png`} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/avatar-mark-128.webp" type="image/webp" sizes="128x128" />
+    <link rel="apple-touch-icon" href="/apple-icon.png" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${SITE.name} 的博客`}
+      href={`${SITE.blog}/blog/rss.xml`}
+    />
+
+    {/* 首屏纸纹是 CSS 背景图。浏览器要等 CSS 解析完才发现它，
+        用 media 限定条件预加载，只有当前真正会用到的那一份会被下载。 */}
+    <link
+      rel="preload"
+      as="image"
+      href="/textures/paper-sm.avif"
+      type="image/avif"
+      media="(prefers-color-scheme: light) and (max-width: 720px)"
+      fetchpriority="low"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/textures/paper.avif"
+      type="image/avif"
+      media="(prefers-color-scheme: light) and (min-width: 721px)"
+      fetchpriority="low"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/textures/screen-glow-sm.avif"
+      type="image/avif"
+      media="(prefers-color-scheme: dark) and (max-width: 720px)"
+      fetchpriority="low"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/textures/screen-glow.avif"
+      type="image/avif"
+      media="(prefers-color-scheme: dark) and (min-width: 721px)"
+      fetchpriority="low"
+    />
+
+    {/* 标题字体是首屏最大的一个文件，提前握手并预载 */}
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/songti-700.woff2" crossorigin />
+
+    <script is:inline>
+      /* 在首次绘制前把主题写到 <html> 上，暗色用户不会先看到一帧白屏。
+         同时打上 js 标记：只有脚本可用时才启用滚动揭示，
+         否则内容必须默认可见（无 JS 与爬虫不能拿到空白页）。 */
+      (function () {
+        try {
+          var el = document.documentElement;
+          el.classList.add("js");
+          var stored = null;
+          try {
+            stored = localStorage.getItem("theme");
+          } catch (e) {}
+          var theme =
+            stored === "light" || stored === "dark"
+              ? stored
+              : window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+          el.setAttribute("data-theme", theme);
+          el.style.colorScheme = theme;
+        } catch (e) {}
+      })();
+    </script>
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: SITE.name,
+        url: SITE.url,
+        description: SITE.description,
+        sameAs: [SITE.github, SITE.blog],
+      })}
+    />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">跳到主要内容</a>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "fetchedAt": "2026-10-06T04:33:25.080Z",
+  "source": "https://blog.oopss.top/blog/rss.xml",
+  "posts": [
+    {
+      "title": "博客支持Blogsclub一键添加友链",
+      "href": "https://blog.oopss.top/blog/blogsclub-friend-link",
+      "date": "2026-10-05",
+      "dateLabel": "2026 年 10 月 5 日",
+      "summary": "最近发现Blogsclub上新了 开放平台 功能，支持把博客接入 BlogsClub 的 OAuth 统一登录，一键授权获取博友的站点地址、头像、邮箱等信息。",
+      "cover": "/covers/blogsclub-friend-link.webp"
+    },
+    {
+      "title": "收到了Blogsclub的鼠标垫",
+      "href": "https://blog.oopss.top/blog/free-mousepad-by-bc",
+      "date": "2026-09-13",
+      "dateLabel": "2026 年 9 月 13 日",
+      "summary": "上周末看到Blogsclub入选“每月拾光”的博主可以0.01积分兑换一个Blogsclub鼠标垫，而我恰好入选了，于是就兑换了一个。",
+      "cover": "/covers/free-mousepad-by-bc.webp"
+    },
+    {
+      "title": "生活|贵阳游记",
+      "href": "https://blog.oopss.top/blog/guiyang-trip",
+      "date": "2026-08-31",
+      "dateLabel": "2026 年 8 月 31 日",
+      "summary": "趁着暑假的尾声，我和几个朋友前往贵阳游玩了几天。其实贵州一直是我很想去的地方，各种山水的景色很吸引人，这次终于有时间去了。本来是打算把贵州全域游览一遍的，但是时间比较紧张，加上黄果树等知名景区游人太多，根本就买不到票，于",
+      "cover": "/covers/guiyang-trip.webp"
+    },
+    {
+      "title": "技术|给博客加上AI搜索功能",
+      "href": "https://blog.oopss.top/blog/tech-add-ai-search-to-blog",
+      "date": "2026-08-22",
+      "dateLabel": "2026 年 8 月 22 日",
+      "summary": "博客本来用的是主题自带的本地搜索，但是本地搜索有一个问题：文章数量多了，搜索速度会很慢，甚至导致浏览器崩溃，于是我想找一个替代方案。",
+      "cover": "/covers/tech-add-ai-search-to-blog.webp"
+    }
+  ]
+}

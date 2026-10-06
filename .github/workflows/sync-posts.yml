@@ -1,0 +1,80 @@
+name: 同步博客文章 / 重新部署
+
+# 三种触发方式：
+#   1. 博客仓库发布新文章 → 通过 repository_dispatch 通知（见文末说明）
+#   2. 每天定时兜底，防止漏掉通知
+#   3. 手动点一下就跑
+on:
+  repository_dispatch:
+    types: [blog-updated]
+  schedule:
+    # 每天 UTC 20:00（北京时间 04:00）跑一次，避开白天
+    - cron: "0 20 * * *"
+  workflow_dispatch:
+
+# 同一时间只允许一个同步任务，避免两次提交打架
+concurrency:
+  group: sync-posts
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  deployments: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出仓库
+        uses: actions/checkout@v4
+
+      - name: 安装 pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: 安装 Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 抓取最新文章
+        id: fetch
+        run: |
+          set +e
+          node scripts/fetch-posts.mjs --limit 4
+          code=$?
+          set -e
+          if [ $code -ne 0 ]; then
+            # 博客临时不可达不该让整个流程失败：
+            # 已有 posts.json 保持不动，这次只是没更新。
+            echo "::warning::RSS 抓取失败，本次跳过更新（沿用已有 posts.json）"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if git diff --quiet -- src/data/posts.json; then
+            echo "文章没有变化，无需提交"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 提交并推送
+        if: steps.fetch.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/posts.json
+          git commit -m "chore(posts): 同步博客最新文章"
+          git push
+
+      # Vercel 与 GitHub 集成后，push 会自动触发部署。
+      # 如果没用集成（比如项目是手动 vercel deploy 的），
+      # 在仓库 Secrets 里配一个 VERCEL_DEPLOY_HOOK，这里就会去踢一脚。
+      - name: 触发 Vercel 部署
+        if: steps.fetch.outputs.changed == 'true' && env.HOOK != ''
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: curl -sS -X POST "$HOOK" -o /dev/null -w "deploy hook: %{http_code}\n"

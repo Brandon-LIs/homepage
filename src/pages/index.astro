@@ -1,0 +1,388 @@
+---
+import Base from "@/layouts/Base.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import PostCard from "@/components/PostCard.astro";
+import DotField from "@/components/DotField.astro";
+import postsData from "@/data/posts.json";
+import {
+  HERO,
+  FACTS,
+  SETUP,
+  SKILLS,
+  PROJECTS,
+  SOCIALS,
+  SITE,
+  BLOG_STATS,
+  ABOUT_PARAGRAPHS,
+} from "@/data/site";
+
+const posts = postsData.posts;
+---
+
+<Base>
+  <SiteHeader />
+
+  <main id="main">
+    {/* ── 首屏 ───────────────────────────────────────────────── */}
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero__screen" aria-hidden="true"></div>
+      <DotField />
+
+      <div class="container hero__inner">
+        <h1 id="hero-title" class="hero__title">
+          {
+            HERO.headline.map((line, i) => (
+              <span class="hero__line">
+                <span
+                  class="hero__line-inner hero-anim"
+                  style={`animation-delay: ${70 + i * 80}ms`}
+                >
+                  {line.map((seg) => (
+                    <span class={seg.accent ? "hero__accent" : undefined}>
+                      {seg.text}
+                    </span>
+                  ))}
+                </span>
+              </span>
+            ))
+          }
+        </h1>
+
+        <p class="hero__lede hero-anim--fade" style="animation-delay: 230ms">
+          {HERO.lede}
+        </p>
+
+        <div class="hero__actions hero-anim--fade" style="animation-delay: 310ms">
+          <a href="/#work" class="btn btn--primary">看看我做了什么</a>
+          <a href={SITE.blog} target="_blank" rel="noopener" class="btn btn--ghost">
+            去博客逛逛
+            <svg viewBox="0 0 14 14" width="13" height="13" aria-hidden="true">
+              <path
+                d="M4 10 10 4M5.4 4H10v4.6"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                fill="none"></path>
+            </svg>
+          </a>
+        </div>
+
+        <p class="hero__meta hero-anim--fade" style="animation-delay: 390ms">
+          {HERO.meta}
+        </p>
+      </div>
+    </section>
+
+    {/* ── 01 关于 ────────────────────────────────────────────── */}
+    <section id="about" class="section" aria-labelledby="about-title">
+      <div class="container">
+        <div class="reveal">
+          <p class="section-index"><span>01</span> 关于</p>
+          <h2 id="about-title" class="section-title">还在读书，也还在写代码</h2>
+        </div>
+
+        <div class="about__grid">
+          <div class="about__main reveal" style="--reveal-delay: 60ms">
+            <div class="prose">
+              {ABOUT_PARAGRAPHS.map((text) => <p>{text}</p>)}
+            </div>
+
+            <figure class="about__card">
+              <img
+                src="/avatar.webp"
+                alt="Brandon 的头像"
+                width="120"
+                height="120"
+                class="about__avatar"
+                loading="eager"
+                decoding="async"
+              />
+              <figcaption>
+                <span class="about__card-name">{SITE.motto}</span>
+                <span class="about__card-note">
+                  {SITE.name} · 高中生开发者
+                </span>
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="about__facts reveal" style="--reveal-delay: 140ms">
+            <ul role="list" class="facts">
+              {
+                FACTS.map((fact) => (
+                  <li class="fact">
+                    <span class="fact__label">{fact.label}</span>
+                    <span class="fact__value">{fact.value}</span>
+                    <span class="fact__detail">{fact.detail}</span>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+
+        <div class="setup reveal" style="--reveal-delay: 80ms">
+          <h3 class="setup__title">平时用什么</h3>
+          <dl class="setup__list">
+            {
+              SETUP.map((row) => (
+                <div class="setup__row">
+                  <dt>{row.label}</dt>
+                  <dd>{row.value}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+
+        <div class="skills reveal" style="--reveal-delay: 80ms">
+          <h3 class="skills__title">手上会的东西</h3>
+          <dl class="skills__grid">
+            {
+              SKILLS.map((group) => (
+                <div class="skills__group">
+                  <dt>{group.group}</dt>
+                  <dd>
+                    <ul role="list" class="tags">
+                      {group.items.map((item) => (
+                        <li class="tag">{item}</li>
+                      ))}
+                    </ul>
+                  </dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    {/* ── 02 项目 ────────────────────────────────────────────── */}
+    <section id="work" class="section section--surface" aria-labelledby="work-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <p class="section-index"><span>02</span> 项目</p>
+            <h2 id="work-title" class="section-title">做过的东西</h2>
+            <p class="section-lede prose">
+              大多是自己遇到问题才动手做的。挑技术有个共同点：能跑在免费额度上就不花钱，
+              数据能自己拿着就不交出去。
+            </p>
+          </div>
+          <a
+            class="section-head__link"
+            href={`${SITE.github}?tab=repositories`}
+            target="_blank"
+            rel="noopener"
+          >
+            全部项目
+            <svg viewBox="0 0 14 14" width="12" height="12" aria-hidden="true">
+              <path
+                d="M4 10 10 4M5.4 4H10v4.6"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                fill="none"></path>
+            </svg>
+          </a>
+        </div>
+
+        <figure class="work__figure reveal" style="--reveal-delay: 60ms">
+          <img
+            src="/textures/shadow-play.avif"
+            alt="皮影戏台：暖橙色的灯光从纸幕后面透出，幕上是一组剪影人物与亭台树木"
+            width="1200"
+            height="800"
+            class="work__img"
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption>
+            「幕影千年」的现场。灯光从皮影背面打过来，观众看到的是影子。
+          </figcaption>
+        </figure>
+
+        <ul role="list" class="projects">
+          {
+            PROJECTS.map((p, i) => (
+              <li class="project reveal" style={`--reveal-delay: ${i * 70}ms`}>
+                <div class="project__head">
+                  <span class="project__year">
+                    {p.year} · {p.category}
+                  </span>
+                  <h3 class="project__name">{p.name}</h3>
+                  <p class="project__tagline">{p.tagline}</p>
+                </div>
+                <div class="project__body">
+                  <p class="project__detail">{p.detail}</p>
+                  <ul role="list" class="tags tags--sm">
+                    {p.stack.map((s) => (
+                      <li class="tag">{s}</li>
+                    ))}
+                  </ul>
+                  <div class="project__links">
+                    <a class="project__link" href={p.href} target="_blank" rel="noopener">
+                      {p.hrefLabel}
+                      <svg viewBox="0 0 14 14" width="12" height="12" aria-hidden="true">
+                        <path
+                          d="M4 10 10 4M5.4 4H10v4.6"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          fill="none"
+                        />
+                      </svg>
+                    </a>
+                    {p.demo && (
+                      <a
+                        class="project__link project__link--muted"
+                        href={p.demo}
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        在线试用
+                        <svg viewBox="0 0 14 14" width="12" height="12" aria-hidden="true">
+                          <path
+                            d="M4 10 10 4M5.4 4H10v4.6"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            fill="none"
+                          />
+                        </svg>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+
+      </div>
+    </section>
+
+    {/* ── 03 写作 ────────────────────────────────────────────── */}
+    <section id="writing" class="section" aria-labelledby="writing-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <p class="section-index"><span>03</span> 写作</p>
+            <h2 id="writing-title" class="section-title">最近写了什么</h2>
+            <p class="section-lede prose">
+              从 {BLOG_STATS.since} 开始写，技术笔记和生活记录混在一起，想到什么写什么。
+            </p>
+          </div>
+          <a
+            class="section-head__link"
+            href={`${SITE.blog}/blog`}
+            target="_blank"
+            rel="noopener"
+          >
+            全部文章
+            <svg viewBox="0 0 14 14" width="12" height="12" aria-hidden="true">
+              <path
+                d="M4 10 10 4M5.4 4H10v4.6"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                fill="none"></path>
+            </svg>
+          </a>
+        </div>
+
+        <ul role="list" class="posts">
+          {
+            posts.map((post, i) => (
+              <li class="post-item reveal" style={`--reveal-delay: ${i * 70}ms`}>
+                <PostCard post={post} />
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    {/* ── 04 联系 ────────────────────────────────────────────── */}
+    <section id="contact" class="section section--surface" aria-labelledby="contact-title">
+      <div class="container">
+        <div class="reveal">
+          <p class="section-index"><span>04</span> 联系</p>
+          <h2 id="contact-title" class="section-title">想聊点什么的话</h2>
+          <p class="section-lede prose">
+            项目有问题、想聊技术、或者只是路过打个招呼，都可以直接找我。邮箱和 GitHub 最靠得住。
+          </p>
+        </div>
+
+        <div class="reveal" style="--reveal-delay: 80ms">
+          <ul role="list" class="contacts">
+            {
+              SOCIALS.map((s) => (
+                <li>
+                  <a
+                    class="contact"
+                    href={s.href}
+                    {...(s.href.startsWith("http")
+                      ? { target: "_blank", rel: "noopener" }
+                      : {})}
+                  >
+                    <span class="contact__label">{s.label}</span>
+                    <span class="contact__handle">{s.handle}</span>
+                    <span class="contact__note">{s.note}</span>
+                    <svg
+                      class="contact__arrow"
+                      viewBox="0 0 14 14"
+                      width="14"
+                      height="14"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M4 10 10 4M5.4 4H10v4.6"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        fill="none"
+                      />
+                    </svg>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Base>
+
+<script>
+  import { initReveal } from "@/scripts/reveal";
+  import { initDotField } from "@/scripts/dotfield";
+  import "@/scripts/site";
+
+  initReveal();
+
+  // 指针点阵只在桌面精细指针且允许动效时加载。
+  // 触屏用户完全不下载这段代码——这也是把它做成动态 import 的原因。
+  const field = document.getElementById("dotfield");
+  const canvas = field?.querySelector<HTMLCanvasElement>(".dotfield__canvas");
+  const glow = field?.querySelector<HTMLElement>(".dotfield__glow");
+  const fine = window.matchMedia("(pointer: fine)").matches;
+  const hoverable = window.matchMedia("(hover: hover)").matches;
+  const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (field && canvas && glow && fine && hoverable && !calm) {
+    // 先显示容器再初始化，否则 getBoundingClientRect 量到 0 尺寸
+    field.hidden = false;
+    initDotField(canvas, glow);
+  }
+</script>

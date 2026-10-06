@@ -13,7 +13,7 @@ export const SITE = {
   name: "Brandon",
   title: "Brandon · 个人主页",
   description:
-    "宜昌高中生，前端与计算机科学学习者，AI 探索者，开源爱好者。这是我的数字门面：我是谁、在做什么、写了什么。",
+    "写前端，也折腾 AI 和硬件，做过 cfmemos、SmartMath 这些开源项目。这里是我的个人主页。",
   blog: "https://blog.oopss.top",
   status: "https://status.oopss.top",
   github: "https://github.com/Brandon-LIs",
@@ -40,12 +40,6 @@ export const SOCIALS = [
     note: "技术笔记与生活记录",
   },
   {
-    label: "哔哩哔哩",
-    handle: "Enthrald",
-    href: "https://space.bilibili.com/3546657819986597",
-    note: "偶尔发点视频",
-  },
-  {
     label: "邮箱",
     handle: "bcihal@qq.com",
     href: "mailto:bcihal@qq.com",
@@ -58,31 +52,29 @@ export type HeadlineSegment = { text: string; accent: boolean };
 
 /** 首屏的一句话定位——页面第一眼要传达的东西。 */
 export const HERO: {
-  greeting: string;
   headline: HeadlineSegment[][];
   lede: string;
   meta: string;
 } = {
-  greeting: "你好，我是 Brandon",
   /* 标题分两行，其中一段用朱砂色点出来。
      这是版面里唯一的"重音"，用来告诉读者哪半句是重点。 */
   headline: [
-    [{ text: "在读高中生", accent: false }],
     [
-      { text: "写代码，", accent: false },
-      { text: "也写生活", accent: true },
+      { text: "你好，我是 ", accent: false },
+      { text: "Brandon", accent: true },
     ],
+    [{ text: "写代码，也写生活", accent: false }],
   ],
-  lede: "宜昌人，宜昌一中在读。从 Python 和 HTML/CSS 起步，现在主要写前端，也折腾 AI 和硬件。学到什么就想马上做出来试试，做完了再写篇文章记一下。",
-  meta: "宜昌市第一中学 · 科创社社长",
+  lede: "从 Python 和 HTML/CSS 入门，眼下主要写前端，剩下的时间给 AI 和硬件。学到什么就想马上做出来试试，做完再写篇文章记一下。",
+  meta: "校园科创社社长",
 };
 
 /** 事实卡片：用可验证的具体信息替代抽象自我评价。 */
 export const FACTS = [
   {
     label: "现在",
-    value: "宜昌市第一中学",
-    detail: "通过宜昌市拔尖创新人才培养选拔考试，提前半年升入高中",
+    value: "提前半年升入高中",
+    detail: "通过拔尖创新人才培养选拔考试，比同届早半年进入高中",
   },
   {
     label: "在做",
@@ -114,7 +106,7 @@ export const SETUP = [
   { label: "主力语言", value: "TypeScript · Python" },
   { label: "硬件", value: "行空板 M10 · ESP32 · 树莓派" },
   { label: "部署", value: "Cloudflare Workers · Vercel" },
-  { label: "时区", value: "UTC+8 宜昌" },
+  { label: "时区", value: "UTC+8" },
 ] as const;
 
 export const SKILLS = [
@@ -142,26 +134,38 @@ export const SKILLS = [
   },
 ] as const;
 
+export type Project = {
+  year: string;
+  category: string;
+  name: string;
+  tagline: string;
+  detail: string;
+  stack: readonly string[];
+  href: string;
+  hrefLabel: string;
+  /** 有在线 demo 的项目才给这个字段 */
+  demo?: string;
+};
+
 /**
  * 项目清单。按"最能说明这个人在做什么"排序，
  * 每条都能点进去看到真实代码或实现记录。
  */
-export const PROJECTS = [
+export const PROJECTS: readonly Project[] = [
   {
     year: "2026",
-    name: "cfmemos",
-    category: "自托管 · 全栈",
-    tagline: "跑在 Cloudflare 上的自托管笔记",
+    name: "幕影千年",
+    category: "竞赛作品 · 软硬结合",
+    tagline: "皮影艺术互动体验装置",
     detail:
-      "把 Memos 用 Cloudflare 全家桶重写了一遍，跑在 Workers + D1 + KV + Assets 上，不用买服务器。兼容 Memos v1 API，前端零构建，41 个测试全绿。目前最活跃的一个仓库。",
-    stack: ["Cloudflare Workers", "D1", "KV", "MIT"],
-    href: "https://github.com/Brandon-LIs/cfmemos",
-    hrefLabel: "GitHub",
-    demo: "https://memos.oopss.top",
+      "国赛作品。行空板 M10 上跑 Flask 服务并自己开 Wi-Fi 热点，MQTT 把 Arduino 的多组舵机连起来做对角联动，摄像头识别手势，Unreal Engine 里做了个数字孪生同步演示。四端要同时跑通，这部分最费劲。",
+    stack: ["行空板 M10", "MQTT", "Arduino", "Unreal Engine"],
+    href: "https://blog.oopss.top/docs/2026kc2",
+    hrefLabel: "创作说明",
   },
   {
     year: "2026",
-    name: "SmartMath · 智学AI",
+    name: "智学AI",
     category: "AI 应用 · 全栈",
     tagline: "让 AI 帮你听懂名师视频",
     detail:
@@ -169,17 +173,6 @@ export const PROJECTS = [
     stack: ["Express", "SQLite", "Vite", "KaTeX", "多模型 AI"],
     href: "https://github.com/Brandon-LIs/SmartMath",
     hrefLabel: "GitHub",
-  },
-  {
-    year: "2026",
-    name: "幕影千年",
-    category: "竞赛作品 · 软硬结合",
-    tagline: "皮影艺术互动体验装置",
-    detail:
-      "国赛作品，皮影互动装置。行空板 M10 上跑 Flask 服务并自己开 Wi-Fi 热点，MQTT 把 Arduino 的多组舵机连起来做对角联动，摄像头识别手势，Unreal Engine 里做了个数字孪生同步演示。四端要同时跑通，这部分最费劲。",
-    stack: ["行空板 M10", "MQTT", "Arduino", "Unreal Engine"],
-    href: "https://blog.oopss.top/docs/2026kc2",
-    hrefLabel: "创作说明",
   },
   {
     year: "2026",
@@ -191,28 +184,6 @@ export const PROJECTS = [
     stack: ["Cloudflare Workers", "S3 / R2"],
     href: "https://github.com/Brandon-LIs/airportal",
     hrefLabel: "GitHub",
-  },
-  {
-    year: "2026",
-    name: "bsz-cfworker",
-    category: "开发者工具 · 开源",
-    tagline: "自建不蒜子访问统计",
-    detail:
-      "不蒜子好用，但数据存在别人那儿。用 Workers + KV 重写了一个，接口和 v3 完全兼容，不用注册也不用数据库，两行代码接进去。我博客的访问量现在跑在这个上面。",
-    stack: ["Cloudflare Workers", "KV", "MIT"],
-    href: "https://github.com/Brandon-LIs/bsz-cfworker",
-    hrefLabel: "GitHub",
-  },
-  {
-    year: "2026",
-    name: "cloud-drive · imgproxy",
-    category: "自托管工具",
-    tagline: "云盘与图床加速",
-    detail:
-      "两个顺手做的小工具。cloud-drive 是 WebDAV 网盘，不用登录就能上传，60 多种格式可预览，打包 ZIP 在浏览器里完成；imgproxy 给 jsDelivr、cdnjs 和 Gravatar 做反代加速。",
-    stack: ["Cloudflare Workers", "WebDAV", "Vercel"],
-    href: "https://github.com/Brandon-LIs?tab=repositories",
-    hrefLabel: "全部仓库",
   },
 ] as const;
 
@@ -226,7 +197,7 @@ export const BLOG_STATS = {
 
 /** 关于页里自我描述的要点，用于「关于」区块的叙事。 */
 export const ABOUT_PARAGRAPHS = [
-  "学编程不算早。初中快毕业才认真开始，从 Python 和 HTML/CSS 入门，后来慢慢摸到 Vue、React 和 Node.js。现在主要写前端，剩下的时间给 AI 和硬件。",
-  "去年通过了宜昌市的拔尖创新人才选拔，提前半年进宜昌一中。在学校是科创社社长，平时带着同学做东西，从网页到行空板和 ESP32 都碰。",
-  "做过的事基本都会留下来。写代码是留成仓库，想不明白的留成文章。七月的国赛只拿到二等奖，回来还是把整场复盘写完了，包括哪些地方做砸了。",
+  "初中快毕业才开始认真学编程。从 Python 和 HTML/CSS 入门，后来慢慢摸到 Vue、React 和 Node.js。现在主要写前端。",
+  "去年通过拔尖创新人才选拔，提前半年升入高中。在学校是科创社社长，平时带着同学做东西，从网页到行空板和 ESP32 都碰。",
+  "做过的项目都留在 GitHub 上。七月的国赛只拿到二等奖，回来把整场复盘写了，哪一步做砸了也写进去了。",
 ] as const;

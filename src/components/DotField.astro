@@ -1,0 +1,16 @@
+---
+/**
+ * 指针反应点阵的容器。
+ *
+ * 关键：容器默认是 hidden 的，只有脚本确认「精细指针 + 可悬停 + 允许动效」
+ * 之后才会把它显示出来并开始绘制。这样：
+ *   - 触屏 / 无 JS / 开了减少动效的环境里，Canvas 永远不参与布局与渲染
+ *   - 也不会出现"画布已在 DOM 里但没人画它"的空壳
+ * Canvas 是纯装饰，标记 aria-hidden 且不接收指针事件。
+ */
+---
+
+<div class="dotfield" id="dotfield" aria-hidden="true" hidden>
+  <div class="dotfield__glow"></div>
+  <canvas class="dotfield__canvas"></canvas>
+</div>

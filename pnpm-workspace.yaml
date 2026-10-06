@@ -1,11 +1,20 @@
 # pnpm 的包管理配置（pnpm 11 起从 package.json 的 pnpm 字段迁移至此）。
 #
-# unrs-resolver 属于 eslint-config-next 依赖链中的原生解析器，
-# 需要允许它执行安装脚本，否则 pnpm 会以非零码退出，
-# 进而中断 typecheck / build 等脚本的前置检查。
+# esbuild 是 Astro/Vite 的构建依赖，需要执行安装脚本下载对应平台的二进制，
+# 不允许的话 pnpm 会以非零码退出，构建直接失败。
 allowBuilds:
-  unrs-resolver: true
+  esbuild: true
 
 # 本机到 npm registry 的网络较慢，放宽超时避免大依赖安装中途失败。
 fetchTimeout: 900000
 fetchRetries: 6
+
+# 主目录里有一个 ~/package.json + node_modules（是 @deepseek-ai/dsh 的安装），
+# 其中包含 CommonJS 版的 cookie@0.7.2。Node 解析依赖时会向上查找到它，
+# 抢在项目自己的 ESM 版 cookie@2 前面，导致 Astro 构建报
+# "Named export 'parseCookie' not found"。
+#
+# 这里显式把 cookie 钉在项目内解析，不去动用户主目录里的任何东西。
+# 同时让 astro 的构建进程优先用项目内的副本。
+overrides:
+  cookie: ^2.0.1

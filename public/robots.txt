@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+
+Host: https://oopss.top
+Sitemap: https://oopss.top/sitemap.xml

@@ -13,7 +13,7 @@
   z-index: var(--z-header);
   background: color-mix(in oklch, var(--bg) 82%, transparent);
   backdrop-filter: saturate(1.6) blur(14px);
-  -webkit-backdrop-filter: saturate(1.6) blur(14px);
+  backdrop-filter: saturate(1.6) blur(14px);
   border-bottom: 1px solid transparent;
   transition: border-color var(--dur-base) var(--ease-out),
     background-color var(--dur-base) var(--ease-out);
@@ -47,17 +47,15 @@
 }
 
 .brand__mark {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 9px;
-  background: var(--brand);
-  color: var(--brand-ink);
-  font-family: var(--font-display);
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0;
+  display: block;
+  width: 32px;
+  height: 32px;
+  /* 头像本身是方形插画，圆形裁切最稳妥；
+     一圈极淡的描边让它在纸白背景上有轮廓，不会糊掉。 */
+  border-radius: var(--r-full);
+  object-fit: cover;
+  background: var(--surface-2);
+  box-shadow: 0 0 0 1px var(--line) inset;
   transition: transform var(--dur-base) var(--ease-out);
 }
 
@@ -277,6 +275,14 @@
   inset: 0;
   z-index: var(--z-base);
   pointer-events: none;
+  /* 先用一层极淡的 CSS 渐变打底：纸纹图还没到时也有质感，
+     不会出现"什么都没有"的空档，也不阻塞任何渲染。 */
+  background-image: linear-gradient(
+    168deg,
+    color-mix(in oklch, var(--bg) 96%, var(--ink)) 0%,
+    var(--bg) 42%,
+    color-mix(in oklch, var(--bg) 97%, var(--brand)) 100%
+  );
   background-image: image-set(
     url("/textures/paper.avif") type("image/avif"),
     url("/textures/paper.webp") type("image/webp")
@@ -339,35 +345,6 @@
 .hero__inner {
   position: relative;
   z-index: var(--z-raised);
-}
-
-.hero__greeting {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  font-size: var(--fs-sm);
-  color: var(--ink-2);
-  letter-spacing: 0.01em;
-  margin-bottom: clamp(1rem, 3vh, 1.6rem);
-}
-
-.hero__dot {
-  width: 7px;
-  height: 7px;
-  border-radius: var(--r-full);
-  background: var(--brand);
-  box-shadow: 0 0 0 4px color-mix(in oklch, var(--brand) 14%, transparent);
-  animation: pulse-dot 2.8s var(--ease-out) infinite;
-}
-
-@keyframes pulse-dot {
-  0%,
-  100% {
-    box-shadow: 0 0 0 4px color-mix(in oklch, var(--brand) 14%, transparent);
-  }
-  50% {
-    box-shadow: 0 0 0 8px color-mix(in oklch, var(--brand) 4%, transparent);
-  }
 }
 
 .hero__title {
@@ -843,6 +820,13 @@
 }
 
 .post__img {
+  /* 必须显式绝对定位撑满封面框。
+     原生 <img> 不会自己填满容器，缺了这几行就会按 height 属性
+     渲染成 420px 高的长条，宽高比全乱。 */
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   transition: transform var(--dur-slow) var(--ease-out);
 }
@@ -923,8 +907,16 @@
   margin: clamp(2rem, 5vh, 3rem) 0 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  /* 正好三个出口，桌面排成三等列最均衡。
+     auto-fit 会留下一个空位，看起来像少了一张卡。 */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
   gap: 0.75rem;
+}
+
+@media (min-width: 900px) {
+  .contacts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 /* li 是网格项；让卡片撑满它，同行才能等高 */
@@ -1369,39 +1361,3 @@
    项目区末尾的出口
    -------------------------------------------------------------------------- */
 
-.work__more {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-top: clamp(2rem, 5vh, 2.75rem);
-  padding: 0.75rem 1.35rem;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--r-md);
-  font-size: var(--fs-sm);
-  font-weight: 500;
-  text-decoration: none;
-  color: var(--ink);
-  transition: border-color var(--dur-fast) var(--ease-out),
-    background-color var(--dur-fast) var(--ease-out),
-    transform var(--dur-base) var(--ease-out);
-}
-
-.work__more:hover {
-  border-color: var(--brand);
-  color: var(--brand);
-  transform: translateY(-1px);
-}
-
-.work__more svg {
-  transition: transform var(--dur-base) var(--ease-out);
-}
-
-.work__more:hover svg {
-  transform: translate(2px, -2px);
-}
-
-@media (pointer: coarse) {
-  .work__more {
-    min-height: 44px;
-  }
-}

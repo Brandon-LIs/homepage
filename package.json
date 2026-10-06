@@ -1,26 +1,29 @@
 {
   "name": "brandon-homepage",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
+  "type": "module",
   "description": "Brandon 的个人主页 · oopss.top",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint",
+    "dev": "astro dev",
+    "build": "node scripts/fetch-posts.mjs && astro build && node scripts/build-og.mjs",
+    "preview": "astro preview",
+    "check": "astro check",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "next": "16.3.8",
-    "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "astro": "^7.3.5"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@types/node": "^24.0.0",
-    "@types/react": "^19.2.0",
-    "@types/react-dom": "^19.2.0",
     "eslint": "^9.0.0",
-    "eslint-config-next": "16.3.8",
-    "typescript": "^5.9.0"
+    "satori": "^0.35.0",
+    "typescript": "^5.9.0",
+    "cookie": "^2.0.1",
+    "@eslint/js": "^9.0.0",
+    "typescript-eslint": "^8.0.0",
+    "@astrojs/check": "^0.9.0"
   }
 }

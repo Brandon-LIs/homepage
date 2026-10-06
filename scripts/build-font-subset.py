@@ -39,11 +39,23 @@ EXTRA = (
 
 
 def collect_chars() -> str:
-    """扫描源码，收集所有会渲染到页面上的字符。"""
+    """
+    扫描源码，收集所有会渲染到页面上的字符。
+
+    必须同时覆盖两处，否则会漏字：
+      - src/**           页面与组件的文字
+      - scripts/build-og.mjs   分享卡片上的文字（它不在 src 里）
+
+    漏字的后果不是报错，而是那个字在渲染时变成空白——曾经就因为
+    只扫了 src，导致 OG 卡片上的「计算科学」少了「算」字。
+    """
+    targets = list(SRC.rglob("*.ts")) + list(SRC.rglob("*.astro"))
+    og_script = ROOT / "scripts" / "build-og.mjs"
+    if og_script.exists():
+        targets.append(og_script)
+
     chars: set[str] = set()
-    for path in SRC.rglob("*"):
-        if path.suffix not in (".ts", ".tsx"):
-            continue
+    for path in targets:
         text = path.read_text(encoding="utf-8")
         # 注释不会渲染，去掉以免把注释里的字也塞进子集
         text = re.sub(r"/\*[\s\S]*?\*/", "", text)
