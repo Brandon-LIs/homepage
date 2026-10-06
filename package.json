@@ -10,11 +10,12 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/fetch-posts.mjs || echo '⚠ RSS 抓取失败，沿用已有 posts.json 继续构建' ; astro build && node scripts/subset-font-after-build.mjs && node scripts/build-og.mjs",
+    "build": "node scripts/check-workflows.mjs && { node scripts/fetch-posts.mjs || echo '⚠ RSS 抓取失败，沿用已有 posts.json 继续构建'; } && astro build && node scripts/subset-font-after-build.mjs && node scripts/build-og.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "check:workflows": "node scripts/check-workflows.mjs"
   },
   "dependencies": {
     "astro": "^7.3.5"

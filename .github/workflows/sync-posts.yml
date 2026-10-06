@@ -1,7 +1,7 @@
-name: 同步博客文章 / 重新部署
+name: 同步博客文章
 
 # 三种触发方式：
-#   1. 博客仓库发布新文章 → 通过 repository_dispatch 通知（见文末说明）
+#   1. 博客仓库发布新文章 → 通过 repository_dispatch 通知（见 README）
 #   2. 每天定时兜底，防止漏掉通知
 #   3. 手动点一下就跑
 on:
@@ -19,7 +19,6 @@ concurrency:
 
 permissions:
   contents: write
-  deployments: write
 
 jobs:
   sync:
@@ -34,7 +33,7 @@ jobs:
       - name: 安装 Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: "22.12"
           cache: pnpm
 
       - name: 安装依赖
@@ -42,12 +41,15 @@ jobs:
 
       - name: 抓取最新文章
         id: fetch
+        # 用块标量（|）而不是行内写法：
+        # YAML 不认识 shell 的引号，行内字符串里出现 ": " 会被当成键值分隔符，
+        # 导致整个工作流无法解析、连启动都启动不了。块标量没有这个坑。
         run: |
           set +e
           node scripts/fetch-posts.mjs --limit 4
           code=$?
           set -e
-          if [ $code -ne 0 ]; then
+          if [ "$code" -ne 0 ]; then
             # 博客临时不可达不该让整个流程失败：
             # 已有 posts.json 保持不动，这次只是没更新。
             echo "::warning::RSS 抓取失败，本次跳过更新（沿用已有 posts.json）"
@@ -70,11 +72,11 @@ jobs:
           git commit -m "chore(posts): 同步博客最新文章"
           git push
 
-      # Vercel 与 GitHub 集成后，push 会自动触发部署。
-      # 如果没用集成（比如项目是手动 vercel deploy 的），
-      # 在仓库 Secrets 里配一个 VERCEL_DEPLOY_HOOK，这里就会去踢一脚。
-      - name: 触发 Vercel 部署
+      # 如果用的是 Vercel 的 Git 集成，上面的 push 会自动触发部署，
+      # 这一步会被跳过。只有配了 VERCEL_DEPLOY_HOOK 才需要它。
+      - name: 触发部署钩子
         if: steps.fetch.outputs.changed == 'true' && env.HOOK != ''
         env:
           HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
-        run: curl -sS -X POST "$HOOK" -o /dev/null -w "deploy hook: %{http_code}\n"
+        run: |
+          curl -sS -X POST "$HOOK" -o /dev/null -w "deploy hook responded %{http_code}\n"
