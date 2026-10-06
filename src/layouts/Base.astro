@@ -92,6 +92,28 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
         sameAs: [SITE.github, SITE.blog],
       })}
     />
+
+    {/*
+      Umami 访问统计（自建实例）。
+
+      几个刻意的选择：
+
+      1. defer 而不是 async。两者都不阻塞解析，但 defer 保证在 DOMContentLoaded
+         之前执行、且按顺序——统计脚本不该和页面自身的初始化抢执行时机。
+
+      2. data-domains 限定只统计生产域名。否则本地 `pnpm dev`、Vercel 预览
+         部署、以及任何 fork 出去的站点都会把数据混进同一份报表里。
+
+      3. 用 is:inline 让 Astro 原样输出这个标签，不打包、不改写属性名——
+         Umami 是靠 data-* 属性读配置的，属性名被处理过就读不到。
+    */}
+    <script
+      is:inline
+      defer
+      src="https://umami.oopss.top/script.js"
+      data-website-id="12b74a52-9a81-4e59-9e52-f424334e1916"
+      data-domains="oopss.top,www.oopss.top"
+    ></script>
   </head>
 
   <body>
