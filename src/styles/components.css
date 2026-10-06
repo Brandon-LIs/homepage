@@ -145,6 +145,29 @@
   transition: transform var(--dur-slow) var(--ease-out);
 }
 
+/* 日/月两个图标常驻在 DOM 里，靠 data-theme 决定显示哪一个。
+   之前漏了这几条规则，两个图标同时渲染，叠成了一个看不出是什么的圆圈。 */
+.theme-toggle__sun,
+.theme-toggle__moon {
+  grid-area: 1 / 1;
+  transition: opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+}
+
+/* 亮色下显示太阳（点击会切到暗色），暗色下显示月亮 */
+[data-theme="light"] .theme-toggle__moon,
+[data-theme="dark"] .theme-toggle__sun {
+  opacity: 0;
+  transform: scale(0.6) rotate(-40deg);
+  pointer-events: none;
+}
+
+[data-theme="light"] .theme-toggle__sun,
+[data-theme="dark"] .theme-toggle__moon {
+  opacity: 1;
+  transform: none;
+}
+
 .theme-toggle:hover .theme-toggle__icon {
   transform: rotate(18deg);
 }
