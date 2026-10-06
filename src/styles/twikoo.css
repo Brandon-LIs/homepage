@@ -1,0 +1,481 @@
+/* ==========================================================================
+   Twikoo 留言板样式覆盖
+   ==========================================================================
+
+   做法：用 Twikoo 官方发行版保证功能，再用本站令牌覆盖它的视觉。
+
+   为什么不用官方 nocss 版自己从头写：
+   Twikoo 有 118 个 .tk-* 类，还带管理面板、表情面板、图片灯箱等分支 UI。
+   从零写一套等于把它的样式表重写一遍，很容易漏掉某个状态（比如审核提示、
+   登录面板）导致页面破相。覆盖式改动范围可控，也不会漏。
+
+   官方默认是 Element UI 的蓝（#409eff 出现 25 次），与本站的纸墨 + 朱砂
+   完全不搭，所以这几处必须压掉：主色、圆角、字体、边框、阴影。
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   容器与整体基调
+   -------------------------------------------------------------------------- */
+
+/* 容器说明：外层是 #twikoo-host，Twikoo 渲染后会往里插入它自己的
+   .twikoo 根节点。这里统一用 #twikoo-host 作前缀，能同时命中两层。 */
+#twikoo-host {
+  /* 覆盖 Twikoo 自己的字体栈，改用本站的正文与标题字体 */
+  font-family: var(--font-sans);
+  color: var(--ink);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
+}
+
+#twikoo-host .tk-comments {
+  margin-top: 0;
+}
+
+/* Twikoo 默认给各块加了不少 margin，按本站节奏收紧 */
+#twikoo-host .tk-comments-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: var(--sp-5);
+}
+
+#twikoo-host .tk-comments-count span {
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+}
+
+/* --------------------------------------------------------------------------
+   输入区
+   -------------------------------------------------------------------------- */
+
+#twikoo-host .tk-submit {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: var(--sp-5);
+}
+
+/* 实测的真实结构：
+   textarea.tk-input__inner.tk-textarea__inner
+     > div.tk-input.tk-textarea
+       > div.tk-col > div.tk-row > div.tk-submit
+   Twikoo 用自己的 tk-* 命名，不是 Element 的 el-*。 */
+#twikoo-host .tk-input__inner,
+#twikoo-host .tk-textarea__inner,
+#twikoo-host .tk-input input,
+#twikoo-host textarea {
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  transition: border-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+
+#twikoo-host .tk-input__inner,
+#twikoo-host .tk-textarea__inner {
+  padding: 0.7rem 0.85rem;
+}
+
+/* 外层 label 样式的输入框（昵称/邮箱/网址）左侧那截 */
+#twikoo-host .tk-input {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+/* 「昵称 / 邮箱 / 网址」这几个前缀不是 <label>，而是 .tk-input--group 里的 span。
+   默认背景是 rgba(144,147,153,.13) 的冷灰，且文字色在暗色主题下不跟随，
+   需要显式接管。 */
+#twikoo-host .tk-input-group__prepend,
+#twikoo-host .tk-input--group > span:first-child,
+#twikoo-host .tk-input--group > span:not(.tk-input__inner) {
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+  background: var(--surface-2);
+  border-right: 1px solid var(--line);
+  padding-inline: 0.75rem;
+  white-space: nowrap;
+}
+
+#twikoo-host textarea.tk-textarea__inner {
+  min-height: 7rem;
+  line-height: 1.75;
+  resize: vertical;
+}
+
+/* 占位符也要达到 4.5:1——Element 默认的 #c0c4cc 在纸白上不可读 */
+#twikoo-host ::placeholder,
+#twikoo-host .el-input__inner::placeholder,
+#twikoo-host .el-textarea__inner::placeholder {
+  color: var(--ink-3);
+  opacity: 1;
+}
+
+#twikoo-host .tk-input:focus-within,
+#twikoo-host .el-textarea__inner:focus,
+#twikoo-host .el-input__inner:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--brand) 14%, transparent);
+  outline: none;
+}
+
+/* --------------------------------------------------------------------------
+   按钮
+   -------------------------------------------------------------------------- */
+
+#twikoo-host .tk-button,
+#twikoo-host button.el-button {
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  min-height: 40px;
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
+  color: var(--ink);
+  transition: background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+#twikoo-host .tk-button:hover,
+#twikoo-host button.el-button:hover {
+  border-color: var(--ink-3);
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+/* 主按钮：唯一使用朱砂色的地方 */
+#twikoo-host .tk-button.tk-button--primary,
+#twikoo-host .tk-button--primary,
+#twikoo-host button.el-button--primary {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--brand-ink);
+}
+
+#twikoo-host .tk-button.tk-button--primary:hover,
+#twikoo-host button.el-button--primary:hover {
+  background: var(--brand-hover);
+  border-color: var(--brand-hover);
+  color: var(--brand-ink);
+}
+
+#twikoo-host .tk-button--small {
+  min-height: 36px;
+  padding: 0.4rem 0.9rem;
+  font-size: var(--fs-xs);
+}
+
+/* 预览/表情这类图标按钮。
+   注意 Twikoo 自带的 .tk-icon 默认是 #409eff（Element 蓝）或 #c0c4cc，
+   必须一并压掉，否则操作栏会掺进蓝色，与纸墨色调冲突。 */
+#twikoo-host .tk-submit-action-icon,
+#twikoo-host .tk-icon {
+  /* 同上的理由：图标属于功能性图形，按 4.5:1 约束 */
+  color: var(--ink-2);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+#twikoo-host .tk-submit-action-icon:hover,
+#twikoo-host .tk-icon:hover {
+  color: var(--brand);
+}
+
+/* 搜索/刷新这类工具图标按钮 */
+#twikoo-host .tk-comments-actions,
+#twikoo-host .tk-comments-actions .tk-icon {
+  /* 这几个是功能性图标（搜索/刷新），亮色下 --ink-3 只有 4.35:1，
+     低于 AA 要求的 4.5，所以用 --ink-2。 */
+  color: var(--ink-2);
+}
+
+#twikoo-host .tk-comments-actions .tk-icon:hover {
+  color: var(--brand);
+}
+
+/* 触屏上点击目标要够大 */
+@media (pointer: coarse) {
+  #twikoo-host .tk-button,
+  #twikoo-host button.el-button,
+  #twikoo-host .tk-submit-action-icon,
+  #twikoo-host .tk-action-link {
+    min-height: 44px;
+  }
+  #twikoo-host .tk-submit-action-icon {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   评论列表
+   -------------------------------------------------------------------------- */
+
+#twikoo-host .tk-comment {
+  padding: var(--sp-5) 0;
+  border-top: 1px solid var(--line);
+  /* Twikoo 默认给评论加了灰底与圆角，与本站的"纸面 + 细线"不合 */
+  background: transparent;
+  border-radius: 0;
+}
+
+#twikoo-host .tk-comment:first-of-type {
+  border-top: none;
+}
+
+#twikoo-host .tk-avatar,
+#twikoo-host .tk-avatar-img {
+  border-radius: var(--r-full);
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+}
+
+#twikoo-host .tk-nick {
+  font-weight: 600;
+  color: var(--ink);
+  font-size: var(--fs-sm);
+}
+
+#twikoo-host .tk-nick:hover {
+  color: var(--brand);
+}
+
+#twikoo-host .tk-time,
+#twikoo-host .tk-time a {
+  color: var(--ink-3);
+  font-size: var(--fs-2xs);
+}
+
+#twikoo-host .tk-content {
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+  line-height: 1.8;
+  margin-top: 0.35rem;
+}
+
+#twikoo-host .tk-content a {
+  color: var(--brand);
+}
+
+/* 评论里的代码与引用 */
+#twikoo-host .tk-content code {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 0.1em 0.35em;
+  font-size: 0.9em;
+}
+
+#twikoo-host .tk-content blockquote {
+  border-left: 2px solid var(--line-strong);
+  margin: 0.6rem 0;
+  padding-left: 0.9rem;
+  color: var(--ink-3);
+}
+
+/* 被回复的引用块 */
+#twikoo-host .tk-reply-quote,
+#twikoo-host .tk-content .tk-ruser {
+  color: var(--ink-3);
+  font-size: var(--fs-xs);
+}
+
+#twikoo-host .tk-ruser {
+  color: var(--brand);
+}
+
+/* 操作区（回复 / 点赞 / 举报） */
+#twikoo-host .tk-actions,
+#twikoo-host .tk-action {
+  gap: 1rem;
+}
+
+#twikoo-host .tk-action-link,
+#twikoo-host .tk-action-icon {
+  color: var(--ink-3);
+  font-size: var(--fs-xs);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+#twikoo-host .tk-action-link:hover,
+#twikoo-host .tk-action-icon:hover,
+#twikoo-host .tk-action-link.tk-is-active {
+  color: var(--brand);
+}
+
+/* --------------------------------------------------------------------------
+   分隔线、加载态、空状态
+   -------------------------------------------------------------------------- */
+
+#twikoo-host .tk-hr,
+#twikoo-host hr {
+  border: none;
+  border-top: 1px solid var(--line);
+}
+
+#twikoo-host .tk-loading-spinner {
+  border-color: var(--line-strong);
+  border-top-color: var(--brand);
+}
+
+#twikoo-host .tk-footer {
+  color: var(--ink-3);
+  font-size: var(--fs-2xs);
+  padding-top: var(--sp-5);
+}
+
+/* 空状态（"没有评论"）。容器是 .tk-comments-no，里面那层 span 无 class。 */
+#twikoo-host .tk-comments-no,
+#twikoo-host .tk-comments-no span {
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  color: var(--ink-3);
+  text-align: center;
+}
+
+#twikoo-host .tk-comments-no {
+  padding: clamp(2rem, 6vh, 3rem) 0;
+}
+
+#twikoo-host .tk-footer a {
+  color: var(--ink-3);
+}
+
+/* --------------------------------------------------------------------------
+   管理面板
+   平时看不见，但登录后样式跟不上会很突兀，所以一并接管。
+   -------------------------------------------------------------------------- */
+
+#twikoo-host .tk-admin {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+#twikoo-host .tk-admin-config-group-title,
+#twikoo-host .tk-admin-config-title {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+#twikoo-host .tk-admin-config-desc,
+#twikoo-host .tk-admin-comment-meta {
+  color: var(--ink-3);
+}
+
+#twikoo-host .tk-admin-config-input,
+#twikoo-host .tk-admin-config-select {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+#twikoo-host .tk-admin-comment-item {
+  border-bottom: 1px solid var(--line);
+}
+
+/* --------------------------------------------------------------------------
+   表情与图片面板
+   -------------------------------------------------------------------------- */
+
+#twikoo-host .tk-owo,
+#twikoo-host .tk-owo-container,
+#twikoo-host .tk-emoji {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-md);
+}
+
+/* --------------------------------------------------------------------------
+   通知与提示条
+   -------------------------------------------------------------------------- */
+
+#twikoo-host .tk-meta-input .el-input__inner,
+#twikoo-host .tk-meta-input .tk-input {
+  background: var(--bg);
+}
+
+#twikoo-host .el-message,
+#twikoo-host .tk-message {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  color: var(--ink);
+  box-shadow: var(--shadow-md);
+}
+
+/* --------------------------------------------------------------------------
+   禁用态
+   发送按钮在昵称/邮箱填完前是禁用的。Twikoo 默认用 opacity: 0.5 表示，
+   结果朱砂色被冲淡成一块暧昧的粉——看起来像配色出错，而不是"还没填完"。
+   改成明确的浅灰底 + 常规文字色，一眼能读懂是"未就绪"。
+   -------------------------------------------------------------------------- */
+
+#twikoo-host .tk-button--primary:disabled,
+#twikoo-host .tk-button--primary.is-disabled,
+#twikoo-host button.tk-button:disabled {
+  background: var(--surface-2);
+  border-color: var(--line);
+  color: var(--ink-3);
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+#twikoo-host .tk-button--primary:disabled:hover,
+#twikoo-host button.tk-button:disabled:hover {
+  background: var(--surface-2);
+  border-color: var(--line);
+  color: var(--ink-3);
+}
+
+/* Element 风格的禁用输入框 */
+#twikoo-host .el-input.is-disabled .el-input__inner,
+#twikoo-host .el-textarea.is-disabled .el-textarea__inner {
+  background: var(--surface-2);
+  color: var(--ink-3);
+  border-color: var(--line);
+}
+
+
+/* --------------------------------------------------------------------------
+   键盘焦点环
+   实测发现 Twikoo 的输入框、排序按钮在 Tab 时没有可见焦点，
+   键盘用户完全不知道焦点在哪。这里显式补上。
+   -------------------------------------------------------------------------- */
+
+#twikoo-host input:focus-visible,
+#twikoo-host textarea:focus-visible,
+#twikoo-host .tk-input__inner:focus-visible,
+#twikoo-host .tk-textarea__inner:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+#twikoo-host button:focus-visible,
+#twikoo-host a:focus-visible,
+#twikoo-host [tabindex]:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* 排序/筛选这类小按钮 */
+#twikoo-host .tk-comments-title button:focus-visible,
+#twikoo-host .tk-comments-actions button:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}

@@ -1,0 +1,277 @@
+---
+import Base from "@/layouts/Base.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import { SITE } from "@/data/site";
+// 只在留言板引入：Twikoo 的覆盖样式对其他页面是死代码
+import "@/styles/twikoo.css";
+
+/**
+ * 留言板。
+ *
+ * 前端用 Twikoo 官方发行版（非 nocss 版），样式由本站覆盖：
+ * 功能、接口调用、XSS 过滤都交给官方代码，出 bug 的概率最低；
+ * 视觉则完全按本站的纸墨风格重做。
+ *
+ * 后端是自建实例 co.oopss.top（Twikoo 2.0.12）。
+ * 评论区按 path 区分，这里固定用 /message，与首页的评论互不干扰。
+ */
+const TWIKOO_ENV_ID = "https://co.oopss.top";
+const TWIKOO_VERSION = "2.0.12";
+/** 这个路径就是留言板在 Twikoo 里的"文章地址"，改动会导致读不到已有评论。 */
+const BOARD_PATH = "/message";
+---
+
+<Base
+  title={`留言板 · ${SITE.name}`}
+  description={`在 ${SITE.name} 的留言板上留句话。想聊技术、提建议，或者只是打个招呼都可以。`}
+>
+  <SiteHeader />
+
+  <main id="main">
+    <section class="section board" aria-labelledby="board-title">
+      <div class="container">
+        <div class="board__head">
+          <p class="section-index"><span>05</span> 留言</p>
+          <h1 id="board-title" class="section-title">留个言吧</h1>
+          <p class="section-lede prose">
+            想聊技术、提建议，或者只是路过打个招呼，都可以写在这里。
+            留下邮箱可以收到回复通知，邮箱不会公开。
+          </p>
+        </div>
+
+        {/*
+          评论挂载点。里面先放一句静态提示：
+          Twikoo 脚本没加载出来时（网络受限、CDN 被拦），
+          访客至少知道这块是干什么的，而不是看到一片空白。
+          Twikoo 初始化时会接管并清空这个容器。
+        */}
+        <div class="board__comments">
+          {/* 容器 id 不能叫 twikoo：Twikoo 内部会创建自己的 #twikoo 根节点，
+              同名会构成重复 id（HTML 无效，且 getElementById 行为不确定）。
+              这里用 twikoo-host，通过 el 选项指给它。 */}
+          <div id="twikoo-host" class="twikoo-host">
+            {/*
+              这段只在脚本没能接管时被看到。
+              分成两种说法，因为"没有 JS"和"脚本加载失败"是两回事：
+              - <noscript> 里的：确定不会加载，直接给出替代方案
+              - 默认的：脚本理论上会来，说"加载中"才是诚实的
+            */}
+            <noscript>
+              <p class="board__fallback">
+                留言板需要 JavaScript 才能显示。开启后刷新即可，
+                或者到
+                <a href={SITE.blog} target="_blank" rel="noopener">博客留言板</a>
+                留言。
+              </p>
+            </noscript>
+            <p class="board__fallback board__fallback--loading">
+              评论组件加载中……如果一直停在这里，可能是网络无法访问评论服务，
+              可以到 <a href={SITE.blog} target="_blank" rel="noopener">博客留言板</a> 留言。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</Base>
+
+<script
+  is:inline
+  define:vars={{ TWIKOO_ENV_ID, TWIKOO_VERSION, BOARD_PATH }}
+>
+  /**
+   * 加载 Twikoo 并初始化。
+   *
+   * 几个刻意的处理：
+   *
+   * 1. 懒加载。评论区在首屏之下，页面加载时不请求；滚到附近再拉脚本，
+   *    不让第三方脚本拖慢首屏。
+   *
+   * 2. 多 CDN 兜底。任何一个源失败就换下一个，避免单一 CDN 抖动
+   *    导致评论区直接空白。
+   *
+   * 3. 失败时给出可读的提示，并把原因写进 console 方便排查，
+   *    而不是让访客对着空白区猜。
+   */
+  (function () {
+    var host = document.getElementById("twikoo-host");
+    if (!host) return;
+
+    var loaded = false;
+    var failed = false;
+
+    // 依次尝试的 CDN。前两个在国内访问较快，jsDelivr 作全球兜底。
+    var SOURCES = [
+      "https://s4.zstatic.net/npm/twikoo@" + TWIKOO_VERSION + "/dist/twikoo.min.js",
+      "https://registry.npmmirror.com/twikoo/" + TWIKOO_VERSION + "/files/dist/twikoo.min.js",
+      "https://cdn.jsdelivr.net/npm/twikoo@" + TWIKOO_VERSION + "/dist/twikoo.min.js",
+    ];
+
+    function showFailure(reason) {
+      if (failed) return;
+      failed = true;
+      host.innerHTML =
+        '<p class="board__fallback">评论组件没能加载出来（' +
+        reason +
+        '）。可以刷新重试，或者到 <a href="' +
+        "https://blog.oopss.top" +
+        '" target="_blank" rel="noopener">博客留言板</a> 留言。</p>';
+    }
+
+    function trySource(i) {
+      if (i >= SOURCES.length) {
+        showFailure("所有源都不可用");
+        return;
+      }
+      var s = document.createElement("script");
+      s.src = SOURCES[i];
+      s.async = true;
+      s.onload = function () {
+        if (!window.twikoo) {
+          trySource(i + 1);
+          return;
+        }
+        try {
+          window.twikoo.init({
+            envId: TWIKOO_ENV_ID,
+            el: "#twikoo-host",
+            // 固定路径：留言板所有访客共用同一个评论区，与文章评论分开
+            path: BOARD_PATH,
+            lang: "zh-CN",
+            onCommentLoaded: function () {
+              document.documentElement.setAttribute("data-twikoo", "ready");
+              fixA11y(host);
+              // 回复、翻页、排序都会重新渲染列表，用 MutationObserver 持续补
+              if (!window.__tkA11yObserver) {
+                var pending = null;
+                window.__tkA11yObserver = new MutationObserver(function () {
+                  if (pending) return;
+                  pending = window.setTimeout(function () {
+                    pending = null;
+                    fixA11y(host);
+                  }, 200);
+                });
+                window.__tkA11yObserver.observe(host, { childList: true, subtree: true });
+              }
+            },
+          });
+          loaded = true;
+        } catch (e) {
+          showFailure("初始化失败");
+          console.error("[twikoo] init 失败:", e);
+        }
+      };
+      s.onerror = function () {
+        trySource(i + 1);
+      };
+      document.head.appendChild(s);
+    }
+
+    /**
+     * 给 Twikoo 生成的无名控件补上可访问名称。
+     *
+     * Twikoo 的模板里，评论操作按钮（<button class="tk-action-link">）
+     * 只有图标没有文字，Markdown 说明链接也只有一个 alt 属性——
+     * alt 在 <a> 上不构成可访问名称。读屏用户完全不知道这些控件干什么。
+     * 这些是第三方生成的内容，改不了源码，所以在这里补 aria-label。
+     *
+     * 三条必须守住的边界（都是踩过才明白的）：
+     *   1. 只给真正可聚焦的元素加。给 <div> 加 aria-label 是无效 ARIA
+     *      （aria-prohibited-attr）——Twikoo 的表情入口就是 div，不能碰。
+     *   2. 有可见文字的元素不要覆盖它的名称，否则读屏读出的名字和
+     *      屏幕上的字对不上（label-content-name-mismatch）。
+     *      排序按钮"最新/最早/热门"本身就够清楚，不该动。
+     *   3. 已经有无障碍名称的跳过，避免反复叠加。
+     */
+    function fixA11y(root) {
+      var ACTION_LABELS = {
+        __like: "点赞",
+        __reply: "回复",
+        __report: "举报",
+        __delete: "删除",
+        __edit: "编辑",
+      };
+
+      // 1. 评论操作按钮：只有图标、没有可见文字
+      root.querySelectorAll("button.tk-action-link").forEach(function (btn) {
+        if (btn.getAttribute("aria-label")) return;
+        var text = (btn.innerText || "").trim();
+        // 有可见文字的（例如点赞数"3"）保留结构，用 aria-label 补充语义
+        var icon = btn.querySelector("i, svg, span");
+        var cls = String((icon && icon.className) || "");
+        var label = "";
+        Object.keys(ACTION_LABELS).forEach(function (k) {
+          if (cls.indexOf(k) !== -1) label = ACTION_LABELS[k];
+        });
+        if (!label && !text) label = "评论操作";
+        if (label) {
+          // 若按钮里有可见数字，把数字并进名称，避免名称与可见文本不符
+          btn.setAttribute("aria-label", text ? label + "（" + text + "）" : label);
+        }
+      });
+
+      // 2. 提交区的图标控件。只处理 <a> 或 <button>，
+      //    绝不碰 <div>——给 div 加 aria-label 会构成无效 ARIA。
+      root
+        .querySelectorAll("a.tk-submit-action-icon, button.tk-submit-action-icon")
+        .forEach(function (el) {
+          if (el.getAttribute("aria-label")) return;
+          var cls = String(el.className || "");
+          var label = "表情";
+          if (cls.indexOf("__image") !== -1) label = "插入图片";
+          else if (cls.indexOf("__markdown") !== -1) label = "Markdown 语法说明";
+          el.setAttribute("aria-label", label);
+          if (el.tagName === "A") el.setAttribute("rel", "noopener noreferrer");
+        });
+
+      // 3. 搜索 / 刷新图标：同样只认可聚焦元素，且必须没有可见文字
+      root
+        .querySelectorAll("button.tk-comments-actions, .tk-comments-actions button, .tk-comments-actions a")
+        .forEach(function (el) {
+          if (el.getAttribute("aria-label")) return;
+          if ((el.innerText || "").trim()) return; // 有文字就别覆盖
+          var icon = el.querySelector("i, svg");
+          var icls = String((icon && icon.className) || el.className || "");
+          var label = icls.indexOf("__search") !== -1 ? "搜索评论"
+            : icls.indexOf("__refresh") !== -1 ? "刷新评论"
+            : "评论工具";
+          el.setAttribute("aria-label", label);
+        });
+
+      // 注意：排序按钮（最新/最早/热门）刻意不处理——
+      // 它们本身有可见文字，再加 aria-label 会触发
+      // label-content-name-mismatch。
+    }
+
+    var started = false;
+
+    function load() {
+      // 懒加载只应触发一次：IntersectionObserver 回调可能因为
+      // 快速滚动或尺寸变化被多次调用，重复加载会重复初始化评论区。
+      if (started || loaded || failed) return;
+      started = true;
+      trySource(0);
+    }
+
+    // 滚到评论区之前 400px 就开始加载，到位置时通常已经就绪
+    if (!("IntersectionObserver" in window)) {
+      load();
+      return;
+    }
+    var io = new IntersectionObserver(
+      function (entries) {
+        for (var k = 0; k < entries.length; k++) {
+          if (entries[k].isIntersecting) {
+            io.disconnect();
+            load();
+          }
+        }
+      },
+      { rootMargin: "400px 0px" }
+    );
+    io.observe(host);
+  })();
+</script>

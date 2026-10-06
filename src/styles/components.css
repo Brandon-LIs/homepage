@@ -1475,3 +1475,52 @@
     display: none;
   }
 }
+
+
+/* --------------------------------------------------------------------------
+   留言板页
+   -------------------------------------------------------------------------- */
+
+.board {
+  min-height: 60vh;
+}
+
+.board__head {
+  margin-bottom: clamp(2rem, 5vh, 3rem);
+}
+
+/* 评论区的最大宽度与正文一致，长评论才好读；
+   但输入框和列表用满宽，避免显得局促 */
+.board__comments {
+  max-width: 76ch;
+}
+
+/* Twikoo 初始化前占位。脚本接管后会清空，所以这段只在
+   脚本没加载成功时被看到——用来解释"为什么这里是空的"。 */
+.board__fallback {
+  margin: 0;
+  padding: clamp(1.5rem, 4vh, 2.25rem);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+  line-height: 1.8;
+  text-align: center;
+}
+
+.board__fallback a {
+  color: var(--brand);
+}
+
+/* Twikoo 渲染完成后去掉占位（它自己会接管容器） */
+.twikoo-host:has(.tk-comments) .board__fallback,
+.twikoo-host:has(.tk-comments) noscript {
+  display: none;
+}
+
+/* 有 JS 时，noscript 里的内容本来就不会显示，
+   但默认那句"加载中"要留着 */
+.board__fallback--loading {
+  margin-top: 0.75rem;
+}

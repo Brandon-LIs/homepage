@@ -180,6 +180,39 @@ src/
 
 ---
 
+## 留言板
+
+`/message`，前端用 Twikoo 官方发行版，后端是自建实例 `co.oopss.top`。
+
+**为什么用官方版而不是 nocss 版自己写样式。** Twikoo 有 118 个 `.tk-*` 类，还带管理面板、表情面板、图片灯箱等分支 UI。从零写等于把它的样式表重写一遍，很容易漏掉某个状态（审核提示、登录面板）导致页面破相。这里的做法是**保留它的功能，覆盖它的视觉**：主色、圆角、字体、边框、阴影全部压成站点令牌。
+
+覆盖过程中最花时间的是**搞清它真实的类名**，而不是猜：
+
+| 我一开始以为 | 实际是 |
+|---|---|
+| `textarea.el-textarea__inner` | `textarea.tk-textarea__inner` |
+| `label` 元素 | `div.tk-input-group__prepend` |
+| `.tk-input` 包着输入框 | `.tk-input` 就是输入框本身 |
+| 空状态是个 span | 容器是 `.tk-comments-no` |
+
+Twikoo 默认是 Element UI 的蓝（`#409eff` 出现 25 次），这些必须逐条压掉。
+
+### 三个真实踩到的坑
+
+**1. 重复的 `id="twikoo"`。** Twikoo 初始化时会在容器里创建它自己的 `#twikoo` 根节点。如果 `el` 也指向 `#twikoo`，DOM 里就有两个同名 id——HTML 无效，且 `getElementById` 返回哪个不确定。改为容器 id 叫 `twikoo-host`，通过 `el` 选项指过去。
+
+**2. 无障碍违规不是我的 CSS 能修的。** Lighthouse 报 `button-name` / `link-name`：Twikoo 自己的模板里，评论操作按钮只有图标没有文字，Markdown 链接只有 `alt`（`alt` 在 `<a>` 上不构成可访问名称）。改不了它的源码，所以在初始化后用 `MutationObserver` 补 `aria-label`。
+
+补的时候又踩了两次：给 `<div>` 加 `aria-label` 构成无效 ARIA（`aria-prohibited-attr`），给有可见文字的排序按钮加 `aria-label` 触发 `label-content-name-mismatch`。最终只处理"可聚焦 + 无可见文字"的元素。
+
+**3. 禁用态的发送按钮像配色出错。** 昵称邮箱没填完时按钮是禁用的，Twikoo 用 `opacity: 0.5` 表示——朱砂色被冲淡成一块暧昧的粉。改成明确的浅灰底 + 常规文字色，一眼能读懂是"未就绪"。
+
+### 实测
+
+真实提交过一条留言，确认后端写入、列表渲染、排序切换都正常（测试评论已用管理员面板删除）。评论区按 `path` 隔离，固定用 `/message`，与博客文章评论互不干扰。
+
+留言板的 Twikoo 覆盖样式只在 `/message` 引入，不会打进首页的样式包。
+
 ## 页脚访问统计
 
 用杜老师的自建不蒜子（[说明](https://dusays.com/posts/771/)），只统计**本站总访问量与总访客数**，不含文章级数据。
