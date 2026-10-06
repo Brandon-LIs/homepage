@@ -4,9 +4,13 @@
   "private": true,
   "type": "module",
   "description": "Brandon 的个人主页 · oopss.top",
+  "packageManager": "pnpm@11.11.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/fetch-posts.mjs && astro build && node scripts/build-og.mjs",
+    "build": "node scripts/fetch-posts.mjs || echo '⚠ RSS 抓取失败，沿用已有 posts.json 继续构建' ; astro build && node scripts/build-og.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "lint": "eslint .",

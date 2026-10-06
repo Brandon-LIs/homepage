@@ -250,6 +250,17 @@ pnpm dlx vercel --prod
 
 ---
 
+## 仓库说明
+
+这个仓库原本 fork 自 [QQHKX/qqhkx-homepage](https://github.com/QQHKX/qqhkx-homepage)，
+2026 年 10 月改版时整站重写（Next.js → Astro），旧源码完整保留在
+[`legacy-nextjs`](https://github.com/Brandon-LIs/homepage/tree/legacy-nextjs) 分支。
+
+新站用到的第三方资源：
+
+- 字体 [Noto Serif SC](https://github.com/notofonts/noto-cjk) 与 [Geist](https://vercel.com/font)，均为 SIL OFL 1.1
+- 配图由 AI 生成后自行处理，着色取自本人作品「幕影千年」
+
 ## 许可
 
 代码部分可自由参考。站内文字与图片内容版权归 Brandon 所有（[CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/)）。
