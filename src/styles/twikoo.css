@@ -479,3 +479,296 @@
   outline: 2px solid var(--brand);
   outline-offset: 2px;
 }
+
+
+/* ==========================================================================
+   排序、头像、移动端布局
+   这几块是补的：最初只覆盖了表单区，评论列表与排序控件漏了，
+   结果移动端「最新/最早/热门」还是 Element 的蓝，列表也偏挤。
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   排序按钮（最新 / 最早 / 热门）
+   实测仍是 rgb(64,158,255)，即 Twikoo 默认的 Element 蓝。
+   -------------------------------------------------------------------------- */
+
+#twikoo-host .tk-comments-sort,
+#twikoo-host .tk-comments-sort .tk-sort-item {
+  font-size: var(--fs-xs);
+}
+
+#twikoo-host .tk-sort-item {
+  color: var(--ink-3);
+  background: none;
+  border: none;
+  padding: 0.25rem 0.4rem;
+  border-radius: var(--r-sm);
+  transition: color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+#twikoo-host .tk-sort-item:hover {
+  color: var(--ink);
+  background: var(--surface-2);
+}
+
+/* 当前选中的排序项：用朱砂色 + 加粗，不用下划线（与全站链接风格一致） */
+#twikoo-host .tk-sort-item.__active,
+#twikoo-host .tk-sort-item.tk-is-active,
+#twikoo-host .tk-sort-item[class*="active"] {
+  color: var(--brand);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   评论头部：计数 + 排序 + 工具图标
+   窄屏上 nowrap 会把它们挤成一行，计数被截断。允许换行。
+   -------------------------------------------------------------------------- */
+
+#twikoo-host .tk-comments-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  justify-content: flex-start;
+}
+
+#twikoo-host .tk-comments-count {
+  margin-right: auto;
+}
+
+#twikoo-host .tk-comments-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+#twikoo-host .tk-comments-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* 搜索输入框在窄屏上不应撑破标题栏 */
+#twikoo-host .tk-comments-search {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: var(--sp-4);
+}
+
+/* --------------------------------------------------------------------------
+   头像
+   默认 40px 在 350px 宽的容器里占比偏大，评论文字被挤到很窄。
+   窄屏收到 34px，并把与正文的间距收紧一些。
+   -------------------------------------------------------------------------- */
+
+#twikoo-host .tk-comment {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+#twikoo-host .tk-comment .tk-avatar {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+}
+
+#twikoo-host .tk-avatar-img {
+  /* 默认占位图标是 #c0c4cc，在纸白上偏浅；用令牌统一 */
+  color: var(--ink-3);
+  fill: var(--ink-3);
+}
+
+#twikoo-host .tk-main {
+  min-width: 0; /* 允许内部文本正常换行，不被 flex 撑开 */
+  flex: 1 1 auto;
+}
+
+/* 昵称与时间在窄屏上换行，避免挤在一起 */
+#twikoo-host .tk-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem 0.5rem;
+}
+
+#twikoo-host .tk-time {
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   操作栏（点赞 / 举报 / 回复）
+   默认在右上角且间隔很大，窄屏上会与昵称抢位置。
+   -------------------------------------------------------------------------- */
+
+#twikoo-host .tk-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
+}
+
+#twikoo-host .tk-action-count {
+  font-size: var(--fs-2xs);
+  color: var(--ink-3);
+}
+
+/* 系统 / 浏览器信息行（评论底部那排小字） */
+#twikoo-host .tk-extras {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.9rem;
+  margin-top: 0.4rem;
+}
+
+#twikoo-host .tk-extra,
+#twikoo-host .tk-extra-text {
+  font-size: var(--fs-2xs);
+  color: var(--ink-3);
+}
+
+/* 回复列表缩进：窄屏上少缩一点，否则正文太窄 */
+#twikoo-host .tk-replies {
+  margin-left: 1.5rem;
+  padding-left: 0.9rem;
+  border-left: 1px solid var(--line);
+}
+
+/* --------------------------------------------------------------------------
+   窄屏收敛
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 560px) {
+  #twikoo-host .tk-submit {
+    padding: var(--sp-4);
+  }
+
+  /* 提交区第一行是「头像 + 输入列」。头像固定，列自适应且允许收缩 */
+  #twikoo-host .tk-submit > .tk-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  #twikoo-host .tk-submit .tk-col {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  #twikoo-host .tk-comment .tk-avatar,
+  #twikoo-host .tk-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  #twikoo-host .tk-comment {
+    gap: 0.6rem;
+  }
+
+  #twikoo-host .tk-comments-title {
+    font-size: 1.05rem;
+  }
+
+  #twikoo-host .tk-sort-item {
+    padding: 0.3rem 0.35rem;
+  }
+
+  /* 窄屏：计数单独一行，排序与工具图标在下一行，避免挤出边界 */
+  #twikoo-host .tk-comments-count {
+    flex: 1 1 100%;
+  }
+
+  #twikoo-host .tk-comments-actions {
+    margin-left: auto;
+  }
+
+  /* 提交区的按钮排成两行，避免发送按钮被挤出屏幕 */
+  #twikoo-host .tk-row-actions-start {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  #twikoo-host .tk-replies {
+    margin-left: 0.5rem;
+    padding-left: 0.65rem;
+  }
+
+  /* 输入框组（昵称/邮箱/网址）。
+     .tk-meta-input 是横向 flex 行，md 以上三个并排。
+     窄屏必须让容器换行、子项各占一行——只给子项 flex-basis:100%
+     而不让容器 wrap，它们仍会挤在同一行里并溢出屏幕。 */
+  #twikoo-host .tk-meta-input {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  #twikoo-host .tk-meta-input__item {
+    flex: 0 0 100%;
+    min-width: 0;
+  }
+
+  #twikoo-host .tk-input--group {
+    display: flex;
+    width: 100%;
+  }
+
+  #twikoo-host .tk-input--group .tk-input__inner {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   触屏点击目标
+   注意：不要给 .tk-icon / svg 本身加 min-width/height——
+   它们是图标本体，会被直接撑大（曾经把搜索图标放大到 44px，
+   在页头右侧非常突兀）。正确的做法是给可点击的**容器**加 padding。
+   -------------------------------------------------------------------------- */
+
+@media (pointer: coarse) {
+  #twikoo-host .tk-sort-item {
+    min-height: 40px;
+    padding-block: 0.4rem;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  #twikoo-host .tk-action-link {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    padding-inline: 0.15rem;
+  }
+
+  /* 图标按钮：用 padding 扩大热区，图标尺寸保持不变。
+     不要再用负 margin 抵消——那会让按钮超出标题栏右边界被裁掉，
+     实测搜索图标因此少了一角。 */
+  #twikoo-host .tk-comments-actions > * {
+    padding: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #twikoo-host .tk-comments-actions .tk-icon,
+  #twikoo-host .tk-comments-actions svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  #twikoo-host .tk-action-icon,
+  #twikoo-host .tk-action-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* 图标尺寸在桌面端也固定住，避免被其它规则带偏 */
+#twikoo-host .tk-comments-actions .tk-icon,
+#twikoo-host .tk-comments-actions svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}

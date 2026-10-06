@@ -1495,6 +1495,22 @@
   max-width: 76ch;
 }
 
+/* 预留高度，消除异步渲染带来的布局跳动。
+   Twikoo 挂载后容器会从 151px 一路长到 720px，每长一次就把页脚往下推，
+   实测 CLS 0.098。这里先按"表单 + 一两条评论"的高度占位。
+
+   关键：用 :has() 在 Twikoo 渲染完成后撤掉预留高度。
+   否则桌面端内容只有 530px 而预留 620px，会平白多出 90px 空白。 */
+.board__comments:not(:has(.tk-comments)) {
+  min-height: 620px;
+}
+
+@media (max-width: 560px) {
+  .board__comments:not(:has(.tk-comments)) {
+    min-height: 700px;
+  }
+}
+
 /* Twikoo 初始化前占位。脚本接管后会清空，所以这段只在
    脚本没加载成功时被看到——用来解释"为什么这里是空的"。 */
 .board__fallback {
