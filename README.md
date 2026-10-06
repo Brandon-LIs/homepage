@@ -213,6 +213,17 @@ Twikoo 默认是 Element UI 的蓝（`#409eff` 出现 25 次），这些必须�
 
 留言板的 Twikoo 覆盖样式只在 `/message` 引入，不会打进首页的样式包。
 
+## 访问统计（Umami）
+
+自建 Umami 实例 `umami.oopss.top`，脚本在 `Base.astro` 里用 `defer` 引入，全站生效（含留言板）。
+
+两个细节值得记一下：
+
+- **`data-domains` 限定只统计生产域名。** 否则本地 `pnpm dev`、Vercel 预览部署都会把数据混进同一份报表。
+- **用 `is:inline` 原样输出脚本标签。** Umami 是靠 `data-website-id` 这类属性读配置的，如果让 Astro 打包处理，属性名被改写就读不到了。
+
+脚本 4.7 KB（gzip 后 2.3 KB），`defer` 不进首屏关键路径——实测加进来之后 FCP 仍在 530–640ms，首屏关键字节维持 138 KB。
+
 ## 页脚访问统计
 
 用杜老师的自建不蒜子（[说明](https://dusays.com/posts/771/)），只统计**本站总访问量与总访客数**，不含文章级数据。
