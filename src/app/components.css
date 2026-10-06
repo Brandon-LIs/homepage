@@ -1,0 +1,1407 @@
+/* ==========================================================================
+   组件样式
+   所有断点集中在 640 / 900 / 1200 三档；其余响应式交给流式网格与 clamp()。
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   页头
+   -------------------------------------------------------------------------- */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  background: color-mix(in oklch, var(--bg) 82%, transparent);
+  backdrop-filter: saturate(1.6) blur(14px);
+  -webkit-backdrop-filter: saturate(1.6) blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--dur-base) var(--ease-out),
+    background-color var(--dur-base) var(--ease-out);
+}
+
+.site-header[data-scrolled] {
+  border-bottom-color: var(--line);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  height: 64px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  flex-shrink: 0;
+}
+
+.brand:hover {
+  color: var(--ink);
+}
+
+.brand__mark {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--brand);
+  color: var(--brand-ink);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.brand:hover .brand__mark {
+  transform: rotate(-6deg) scale(1.04);
+}
+
+.brand__name {
+  font-size: var(--fs-sm);
+}
+
+.site-nav__list {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.site-nav__link {
+  display: inline-block;
+  padding: 0.4rem 0.7rem;
+  border-radius: var(--r-sm);
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.site-nav__link:hover {
+  color: var(--ink);
+  background: var(--surface-2);
+}
+
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.site-header__blog {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: var(--r-sm);
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.site-header__blog:hover {
+  color: var(--brand);
+}
+
+.site-header__blog svg {
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.site-header__blog:hover svg {
+  transform: translate(2px, -2px);
+}
+
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-sm);
+  color: var(--ink-2);
+  transition: color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.theme-toggle:hover {
+  color: var(--ink);
+  background: var(--surface-2);
+}
+
+.theme-toggle__icon {
+  display: grid;
+  place-items: center;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.theme-toggle:hover .theme-toggle__icon {
+  transform: rotate(18deg);
+}
+
+/* 移动端菜单按钮 —— 只在窄屏出现 */
+.nav-toggle {
+  display: none;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-sm);
+  color: var(--ink);
+}
+
+.nav-toggle:hover {
+  background: var(--surface-2);
+}
+
+.nav-toggle__bars {
+  position: relative;
+  display: block;
+  width: 18px;
+  height: 12px;
+}
+
+.nav-toggle__bars span {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform var(--dur-base) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out);
+}
+
+.nav-toggle__bars span:first-child {
+  top: 0;
+}
+
+.nav-toggle__bars span:last-child {
+  bottom: 0;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle__bars span:first-child {
+  transform: translateY(5.25px) rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle__bars span:last-child {
+  transform: translateY(-5.25px) rotate(-45deg);
+}
+
+.mobile-nav {
+  border-top: 1px solid var(--line);
+  background: var(--bg);
+  animation: mobile-nav-in var(--dur-base) var(--ease-out) both;
+}
+
+@keyframes mobile-nav-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.mobile-nav__list {
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem var(--gutter) 1.25rem;
+}
+
+.mobile-nav__link {
+  display: block;
+  padding: 0.85rem 0.25rem;
+  color: var(--ink);
+  font-size: 1.05rem;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.mobile-nav__list li:last-child .mobile-nav__link {
+  border-bottom: none;
+}
+
+.mobile-nav__link--ext {
+  color: var(--brand);
+}
+
+@media (max-width: 900px) {
+  .site-nav {
+    display: none;
+  }
+
+  .nav-toggle {
+    display: grid;
+  }
+
+  .site-header__blog {
+    display: none;
+  }
+}
+
+@media (min-width: 901px) {
+  .mobile-nav {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Hero
+   -------------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  padding-block: clamp(4rem, 14vh, 9rem) clamp(4.5rem, 13vh, 8rem);
+  overflow: hidden;
+}
+
+/* 背光纸幕。
+   亮色主题下几乎只是给纸面一点极淡的纤维感；
+   暗色主题下才真正成为"灯打在幕上"——因为皮影本来就是在暗处看的。 */
+.hero__screen {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-base);
+  pointer-events: none;
+  background-image: image-set(
+    url("/textures/paper.avif") type("image/avif"),
+    url("/textures/paper.webp") type("image/webp")
+  );
+  background-size: cover;
+  background-position: center;
+  /* 亮色下纸纹只作为"这是纸不是屏幕"的暗示，压到很淡。
+     不用 mix-blend-mode：整屏的混合层会让浏览器每一帧重新合成整个
+     hero，而 hero 里有个每帧重绘的 canvas，代价很大。 */
+  opacity: 0.3;
+}
+
+/* 暗色下才是真正的"灯打在幕上"——皮影本来就是在暗处看的。
+   这里可以用力一些，因为深底上的暖光本身就是主角。 */
+[data-theme="dark"] .hero__screen {
+  background-image: image-set(
+    url("/textures/screen-glow.avif") type("image/avif"),
+    url("/textures/screen-glow.webp") type("image/webp")
+  );
+  opacity: 0.62;
+}
+
+/* 窄屏换用 900px 的版本。这块背景是首屏最大的一笔下载，
+   在手机上换成小图能省掉一半体积，肉眼几乎看不出差别。 */
+@media (max-width: 720px) {
+  .hero__screen {
+    background-image: image-set(
+      url("/textures/paper-sm.avif") type("image/avif"),
+      url("/textures/paper-sm.webp") type("image/webp")
+    );
+  }
+
+  [data-theme="dark"] .hero__screen {
+    background-image: image-set(
+      url("/textures/screen-glow-sm.avif") type("image/avif"),
+      url("/textures/screen-glow-sm.webp") type("image/webp")
+    );
+  }
+}
+
+/* 暗色下正文直接压在亮起来的幕布上，需要一层暗罩保证对比度 */
+[data-theme="dark"] .hero__inner {
+  position: relative;
+}
+[data-theme="dark"] .hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-base);
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    oklch(0.145 0.01 285 / 0.92) 0%,
+    oklch(0.145 0.01 285 / 0.74) 38%,
+    oklch(0.145 0.01 285 / 0.28) 62%,
+    transparent 100%
+  );
+}
+
+.hero__inner {
+  position: relative;
+  z-index: var(--z-raised);
+}
+
+.hero__greeting {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: var(--fs-sm);
+  color: var(--ink-2);
+  letter-spacing: 0.01em;
+  margin-bottom: clamp(1rem, 3vh, 1.6rem);
+}
+
+.hero__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--r-full);
+  background: var(--brand);
+  box-shadow: 0 0 0 4px color-mix(in oklch, var(--brand) 14%, transparent);
+  animation: pulse-dot 2.8s var(--ease-out) infinite;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 4px color-mix(in oklch, var(--brand) 14%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 8px color-mix(in oklch, var(--brand) 4%, transparent);
+  }
+}
+
+.hero__title {
+  font-size: var(--fs-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+  font-weight: 700;
+  margin: 0 0 clamp(1.5rem, 4vh, 2.25rem);
+  max-width: 18ch;
+}
+
+.hero__line {
+  display: block;
+  /* 给上浮的模糊留出空间，避免 filter 被裁掉 */
+  padding-block: 0.06em;
+}
+
+.hero__line-inner {
+  display: block;
+}
+
+.hero__lede {
+  font-size: var(--fs-lead);
+  line-height: 1.75;
+  color: var(--ink-2);
+  max-width: 46ch;
+  margin-bottom: clamp(1.75rem, 5vh, 2.5rem);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.hero__meta {
+  margin-top: clamp(2rem, 6vh, 3rem);
+  font-size: var(--fs-xs);
+  color: var(--ink-3);
+  letter-spacing: 0.02em;
+}
+
+/* --------------------------------------------------------------------------
+   按钮
+   -------------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 46px;
+  padding: 0.7rem 1.4rem;
+  border-radius: var(--r-md);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--primary {
+  background: var(--brand);
+  color: var(--brand-ink);
+  border: 1px solid var(--brand);
+}
+
+.btn--primary:hover {
+  background: var(--brand-hover);
+  border-color: var(--brand-hover);
+  color: var(--brand-ink);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+}
+
+.btn--ghost:hover {
+  color: var(--ink);
+  border-color: var(--ink-3);
+  background: var(--surface);
+}
+
+/* --------------------------------------------------------------------------
+   指针反应点阵
+   -------------------------------------------------------------------------- */
+
+.dotfield {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-base);
+  overflow: hidden;
+  pointer-events: none;
+  /* 顶部与底部淡出，让网格自然消融而不是被硬边切断 */
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 14%,
+    #000 72%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 14%,
+    #000 72%,
+    transparent 100%
+  );
+}
+
+.dotfield__glow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 620px;
+  height: 620px;
+  margin-left: -310px;
+  margin-top: -310px;
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease-out);
+  will-change: transform;
+}
+
+.dotfield__canvas {
+  position: absolute;
+  inset: 0;
+  /* canvas 是替换元素：只给 inset 无法撑开，width/height auto 会退回
+     内在尺寸 300×150，必须显式给百分比才会填满容器。 */
+  width: 100%;
+  height: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   区块标题
+   -------------------------------------------------------------------------- */
+
+.section-title {
+  font-size: var(--fs-h2);
+  font-weight: 650;
+  margin-bottom: clamp(0.75rem, 2vh, 1.1rem);
+}
+
+.section-lede {
+  color: var(--ink-2);
+  font-size: var(--fs-body);
+  margin-bottom: clamp(2rem, 5vh, 3rem);
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--sp-5);
+  flex-wrap: wrap;
+}
+
+.section-head .section-lede {
+  margin-bottom: 0;
+}
+
+.section-head__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  padding-bottom: 0.35rem;
+}
+
+.section-head__link svg {
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.section-head__link:hover svg {
+  transform: translate(2px, -2px);
+}
+
+.section-head + .posts,
+.section-head ~ .posts {
+  margin-top: clamp(2rem, 5vh, 3rem);
+}
+
+/* --------------------------------------------------------------------------
+   关于
+   -------------------------------------------------------------------------- */
+
+.about__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+  margin-top: clamp(1.5rem, 4vh, 2.5rem);
+}
+
+.about__main .prose p {
+  color: var(--ink-2);
+  margin-bottom: 1.15rem;
+}
+
+.about__main .prose p:last-child {
+  margin-bottom: 0;
+}
+
+.about__card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: clamp(2rem, 5vh, 2.75rem) 0 0;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  max-width: 380px;
+}
+
+.about__avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--r-full);
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--surface-2);
+}
+
+.about__card figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.about__card-name {
+  font-weight: 600;
+  font-size: var(--fs-sm);
+}
+
+.about__card-note {
+  font-size: var(--fs-xs);
+  color: var(--ink-3);
+  line-height: 1.5;
+}
+
+/* 事实列表 */
+.facts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+
+.fact {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 0.25rem 1rem;
+  padding: 1.15rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.fact__label {
+  font-size: var(--fs-xs);
+  color: var(--ink-3);
+  letter-spacing: 0.04em;
+  padding-top: 0.2rem;
+}
+
+.fact__value {
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+.fact__detail {
+  grid-column: 2;
+  font-size: var(--fs-sm);
+  color: var(--ink-2);
+  line-height: 1.7;
+}
+
+/* 技能 */
+.skills {
+  margin-top: clamp(3rem, 8vh, 4.5rem);
+  padding-top: clamp(2rem, 5vh, 3rem);
+  border-top: 1px solid var(--line);
+}
+
+.skills__title {
+  font-size: var(--fs-h3);
+  margin-bottom: clamp(1.5rem, 4vh, 2rem);
+}
+
+.skills__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: clamp(1.5rem, 4vw, 2.75rem);
+  margin: 0;
+}
+
+.skills__group dt {
+  font-size: var(--fs-xs);
+  color: var(--ink-3);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.85rem;
+}
+
+.skills__group dd {
+  margin: 0;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.32rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+  background: var(--bg);
+  color: var(--ink-2);
+  font-size: var(--fs-xs);
+  line-height: 1.5;
+  white-space: nowrap;
+  transition: border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.tag:hover {
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.tags--sm .tag {
+  font-size: var(--fs-2xs);
+  padding: 0.25rem 0.6rem;
+}
+
+/* --------------------------------------------------------------------------
+   项目
+   -------------------------------------------------------------------------- */
+
+.projects {
+  list-style: none;
+  margin: clamp(2rem, 5vh, 3rem) 0 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+
+.project {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr);
+  gap: clamp(1rem, 4vw, 3.5rem);
+  padding: clamp(1.75rem, 4vh, 2.5rem) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.project__head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.project__year {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+}
+
+.project__name {
+  font-size: var(--fs-h3);
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.project__tagline {
+  font-size: var(--fs-sm);
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+
+.project__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.project__detail {
+  font-size: var(--fs-sm);
+  color: var(--ink-2);
+  line-height: 1.8;
+  margin: 0;
+}
+
+.project__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  text-decoration: none;
+  margin-top: 0.15rem;
+}
+
+.project__link svg {
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.project__link:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* --------------------------------------------------------------------------
+   文章列表
+   -------------------------------------------------------------------------- */
+
+.posts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr));
+  gap: clamp(1.25rem, 3vw, 2rem);
+  margin-top: clamp(2rem, 5vh, 3rem);
+}
+
+/* 每个 li 是一个网格项；卡片填满它，保证同行等宽等高 */
+.post-item {
+  display: flex;
+}
+
+.post {
+  display: grid;
+  grid-template-columns: 116px minmax(0, 1fr);
+  gap: 1.15rem;
+  align-items: start;
+  width: 100%;
+  padding: 0.9rem;
+  border-radius: var(--r-lg);
+  text-decoration: none;
+  color: inherit;
+  transition: background-color var(--dur-base) var(--ease-out);
+}
+
+.post:hover {
+  background: var(--surface);
+}
+
+.post__cover {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--surface-2);
+}
+
+.post__img {
+  object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.post:hover .post__img {
+  transform: scale(1.04);
+}
+
+.post__cover-fallback {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklch, var(--brand) 14%, var(--surface-2)),
+    var(--surface-2)
+  );
+}
+
+.post__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.post__date {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  color: var(--ink-3);
+  letter-spacing: 0.03em;
+}
+
+.post__title {
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  margin: 0;
+  transition: color var(--dur-fast) var(--ease-out);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.post:hover .post__title {
+  color: var(--brand);
+}
+
+.post__summary {
+  font-size: var(--fs-xs);
+  color: var(--ink-2);
+  line-height: 1.7;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@media (max-width: 520px) {
+  .post {
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  .post__summary {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   联系
+   -------------------------------------------------------------------------- */
+
+.contacts {
+  list-style: none;
+  margin: clamp(2rem, 5vh, 3rem) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: 0.75rem;
+}
+
+/* li 是网格项；让卡片撑满它，同行才能等高 */
+.contacts li {
+  display: flex;
+}
+
+.contact {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem 0.6rem;
+  padding: 1.1rem 2.25rem 1.1rem 1.25rem;
+  min-height: 64px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--bg);
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  transition: border-color var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+
+.contact__note {
+  flex-basis: 100%;
+  font-size: var(--fs-2xs);
+  color: var(--ink-3);
+  margin-top: 0.15rem;
+}
+
+.contact:hover {
+  border-color: var(--line-strong);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  color: inherit;
+}
+
+.contact__label {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.contact__handle {
+  font-size: var(--fs-xs);
+  color: var(--ink-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contact__arrow {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  color: var(--ink-3);
+  transition: transform var(--dur-base) var(--ease-out),
+    color var(--dur-base) var(--ease-out);
+}
+
+.contact:hover .contact__arrow {
+  transform: translate(2px, -2px);
+  color: var(--brand);
+}
+
+/* --------------------------------------------------------------------------
+   页脚
+   -------------------------------------------------------------------------- */
+
+.site-footer {
+  border-top: 1px solid var(--line);
+  padding-block: clamp(2.5rem, 6vh, 4rem) 2rem;
+  background: var(--bg);
+}
+
+.site-footer__inner {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 5vh, 3rem);
+}
+
+.site-footer__brand {
+  max-width: 34ch;
+}
+
+.site-footer__motto {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.site-footer__desc {
+  font-size: var(--fs-sm);
+  color: var(--ink-2);
+  line-height: 1.75;
+}
+
+.site-footer__nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.site-footer__col-title {
+  font-family: var(--font-sans);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--ink-3);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.9rem;
+}
+
+.site-footer__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+/* 触屏上页脚链接是主要出口，需要满足 44px 的最小点击高度。
+   用 min-height 撑开而不是加 padding，桌面端视觉不变。 */
+.site-footer__list a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+@media (min-width: 900px) {
+  .site-footer__list {
+    gap: 0.55rem;
+  }
+
+  .site-footer__list a {
+    min-height: 0;
+  }
+}
+
+.site-footer__list a:hover {
+  color: var(--brand);
+  text-decoration: underline;
+}
+
+.site-footer__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-xs);
+  color: var(--ink-3);
+}
+
+.site-footer__bottom p {
+  margin: 0;
+}
+
+.site-footer__bottom a {
+  color: var(--ink-2);
+}
+
+@media (min-width: 900px) {
+  .site-footer__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+    gap: clamp(2rem, 6vw, 5rem);
+  }
+
+  .site-footer__bottom {
+    grid-column: 1 / -1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   响应式收敛
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .about__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(2rem, 6vh, 3rem);
+  }
+
+  .project {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+
+  .hero__title {
+    max-width: 14ch;
+  }
+
+  .hero__lede {
+    max-width: 40ch;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding-block: clamp(2.5rem, 9vh, 4rem) clamp(3.5rem, 10vh, 5rem);
+  }
+
+  .hero__title {
+    max-width: 100%;
+  }
+
+  .hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .fact {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.3rem;
+  }
+
+  .fact__label {
+    padding-top: 0;
+  }
+
+  .fact__detail {
+    grid-column: 1;
+  }
+
+  .section-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* 粗指针设备（触屏）不依赖 hover 传递信息 */
+@media (hover: none) {
+  .contact:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .post:hover .post__img {
+    transform: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   404
+   -------------------------------------------------------------------------- */
+
+.notfound {
+  min-height: 62vh;
+  display: grid;
+  align-content: center;
+}
+
+.notfound__code {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.18em;
+  color: var(--brand);
+  margin-bottom: 0.75rem;
+}
+
+.notfound__title {
+  font-size: var(--fs-h1);
+  margin-bottom: 0.85rem;
+}
+
+.notfound__text {
+  color: var(--ink-2);
+  margin-bottom: 2rem;
+  max-width: 40ch;
+}
+
+.notfound .hero__actions {
+  gap: 0.75rem;
+}
+
+.project__links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.project__link--muted {
+  color: var(--ink-2);
+  font-weight: 400;
+}
+
+.project__link--muted:hover {
+  color: var(--brand);
+}
+
+/* --------------------------------------------------------------------------
+   触屏可用性（放在文件末尾以覆盖上面的组件默认值）
+   粗指针没有 hover，图标按钮与文字链接需要满足 44px 的最小点击尺寸。
+   -------------------------------------------------------------------------- */
+
+@media (pointer: coarse) {
+  .theme-toggle,
+  .nav-toggle {
+    width: 44px;
+    height: 44px;
+  }
+
+  .project__link,
+  .section-head__link,
+  .site-footer__bottom a,
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .site-header__inner {
+    min-height: 60px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   项目区的皮影现场图
+   这是页面上唯一一张具象图片，也是整套配色的出处，所以给它足够的空间。
+   -------------------------------------------------------------------------- */
+
+.work__figure {
+  margin: clamp(2rem, 5vh, 3rem) 0 clamp(2.5rem, 6vh, 3.5rem);
+}
+
+.work__img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--r-md);
+  /* 这张图本身就是暗底暖光，亮色主题下需要一点边界感才不会"飘" */
+  box-shadow: var(--shadow-md);
+}
+
+[data-theme="light"] .work__img {
+  outline: 1px solid var(--line);
+  outline-offset: -1px;
+}
+
+.work__figure figcaption {
+  margin-top: 0.85rem;
+  font-size: var(--fs-xs);
+  color: var(--ink-3);
+  line-height: 1.7;
+  max-width: 52ch;
+}
+
+/* --------------------------------------------------------------------------
+   区块编号
+   四个区块构成一条"关于 → 项目 → 写作 → 联系"的阅读顺序，所以用编号，
+   而不是给每个区块都套一个小写英文 eyebrow（那是模板痕迹）。
+   -------------------------------------------------------------------------- */
+
+.section-index {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7em;
+  font-size: var(--fs-xs);
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+  margin-bottom: 0.9rem;
+}
+
+.section-index span {
+  font-family: var(--font-mono);
+  color: var(--brand);
+  font-size: 0.95em;
+}
+
+/* --------------------------------------------------------------------------
+   首屏重音——标题里唯一带颜色的那半句
+   -------------------------------------------------------------------------- */
+
+.hero__accent {
+  color: var(--brand);
+}
+
+/* --------------------------------------------------------------------------
+   工作环境清单
+   具体的工具名比"热爱技术"更有说服力，也让关于区不只是散文。
+   -------------------------------------------------------------------------- */
+
+.setup {
+  margin-top: clamp(3rem, 8vh, 4.5rem);
+  padding-top: clamp(2rem, 5vh, 3rem);
+  border-top: 1px solid var(--line);
+}
+
+.setup__title {
+  font-size: var(--fs-h3);
+  margin-bottom: clamp(1.25rem, 3vh, 1.75rem);
+}
+
+.setup__list {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 0 clamp(1.5rem, 4vw, 3rem);
+}
+
+.setup__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.setup__row dt {
+  font-size: var(--fs-sm);
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.setup__row dd {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--ink);
+  text-align: right;
+}
+
+/* --------------------------------------------------------------------------
+   项目区末尾的出口
+   -------------------------------------------------------------------------- */
+
+.work__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: clamp(2rem, 5vh, 2.75rem);
+  padding: 0.75rem 1.35rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--ink);
+  transition: border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+}
+
+.work__more:hover {
+  border-color: var(--brand);
+  color: var(--brand);
+  transform: translateY(-1px);
+}
+
+.work__more svg {
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.work__more:hover svg {
+  transform: translate(2px, -2px);
+}
+
+@media (pointer: coarse) {
+  .work__more {
+    min-height: 44px;
+  }
+}

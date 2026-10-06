@@ -1,0 +1,164 @@
+/* ==========================================================================
+   布局原语
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--w-content);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: var(--section-y);
+  position: relative;
+}
+
+.section--tight {
+  padding-block: clamp(3rem, 7vh, 5rem);
+}
+
+.section--surface {
+  background: var(--surface);
+}
+
+.prose {
+  max-width: var(--w-prose);
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: 0;
+  transform: translateY(-150%);
+  z-index: var(--z-toast);
+  background: var(--brand);
+  color: var(--brand-ink);
+  padding: var(--sp-3) var(--sp-5);
+  border-radius: 0 0 var(--r-md) var(--r-md);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline-offset: -4px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --------------------------------------------------------------------------
+   入场动画
+   内容默认可见；仅在 JS 就绪（html.js）且用户未要求减少动效时才隐藏。
+   -------------------------------------------------------------------------- */
+
+/* 入场动画。刻意不用 filter: blur()——大字号中文标题上做模糊合成
+   在移动端开销明显，还会把首屏最大元素的绘制时间往后推，直接拖慢 LCP。
+   只用 transform + opacity，两者都能走合成层，代价低得多。 */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.9em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 无 JS 时不套用动画的隐藏起点，直接呈现终态 */
+html.js .hero-anim {
+  animation: hero-rise 0.52s var(--ease-out-quart) both;
+}
+
+html.js .hero-anim--fade {
+  animation: hero-fade 0.58s var(--ease-out) both;
+}
+
+/* 滚动揭示——只有 JS 激活后才进入待揭示状态。
+   刻意不给 will-change：页面上同时有二十多个 .reveal 元素，
+   逐一提升合成层会在移动端造成明显的风格计算与内存开销，
+   而这些元素只做一次 0.7s 的位移+淡入，交给合成器按需处理即可。 */
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(1.25rem);
+  transition: opacity 0.72s var(--ease-out-quart),
+    transform 0.72s var(--ease-out-quart);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+html.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* --------------------------------------------------------------------------
+   无障碍：减少动效
+   所有动画退化为瞬时呈现终态，指针层不挂载。
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html.js .reveal,
+  html.js .hero-anim,
+  html.js .hero-anim--fade {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    animation: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   打印
+   -------------------------------------------------------------------------- */
+
+@media print {
+  .no-print,
+  .site-header,
+  .dotfield {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  html.js .reveal,
+  html.js .hero-anim,
+  html.js .hero-anim--fade {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    animation: none;
+  }
+}

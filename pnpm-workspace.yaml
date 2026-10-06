@@ -1,0 +1,11 @@
+# pnpm 的包管理配置（pnpm 11 起从 package.json 的 pnpm 字段迁移至此）。
+#
+# unrs-resolver 属于 eslint-config-next 依赖链中的原生解析器，
+# 需要允许它执行安装脚本，否则 pnpm 会以非零码退出，
+# 进而中断 typecheck / build 等脚本的前置检查。
+allowBuilds:
+  unrs-resolver: true
+
+# 本机到 npm registry 的网络较慢，放宽超时避免大依赖安装中途失败。
+fetchTimeout: 900000
+fetchRetries: 6
