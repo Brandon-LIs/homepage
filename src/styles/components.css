@@ -50,11 +50,12 @@
   display: block;
   width: 32px;
   height: 32px;
-  /* 头像本身是方形插画，圆形裁切最稳妥；
-     一圈极淡的描边让它在纸白背景上有轮廓，不会糊掉。 */
-  border-radius: var(--r-full);
-  object-fit: cover;
+  /* 方形圆角，不切成圆——原图是完整构图的插画，圆形会切掉四角内容。
+     圆角比纯方形柔和，又不损失画面。 */
+  border-radius: 30%;
+  object-fit: contain;
   background: var(--surface-2);
+  /* 一圈极淡的描边，让浅色插画在纸白背景上有轮廓 */
   box-shadow: 0 0 0 1px var(--line) inset;
   transition: transform var(--dur-base) var(--ease-out);
 }
@@ -574,10 +575,12 @@
 .about__avatar {
   width: 56px;
   height: 56px;
-  border-radius: var(--r-full);
-  object-fit: cover;
+  /* 与页头保持一致：方形圆角 + contain，完整显示插画不裁切 */
+  border-radius: 26%;
+  object-fit: contain;
   flex-shrink: 0;
   background: var(--surface-2);
+  box-shadow: 0 0 0 1px var(--line) inset;
 }
 
 .about__card figcaption {

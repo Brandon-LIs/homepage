@@ -12,13 +12,17 @@ const NAV = [
 <header class="site-header" id="site-header">
   <div class="site-header__inner container">
     <a href="/" class="brand">
-      {/* 用专门裁过的头像：原图五官偏左，直接圆形裁切在 32px 下
-          会糊成一团白色。avatar-mark 是以脸部为中心重新裁的正方形，
-          小尺寸下眼睛和轮廓还认得出来。2x 图用于高分屏。 */}
+      {/* 头像完整显示，不做裁切——插画四角都有内容（左下的背包、
+          右下的衣服、四周的雨丝），切掉任何一边都会显得残缺。
+          给出 1x/2x/4x 三档，高分屏取更清晰的那张。 */}
       <img
         class="brand__mark"
         src="/avatar-mark-64.webp"
-        srcset="/avatar-mark-64.webp 1x, /avatar-mark-128.webp 2x"
+        srcset="
+          /avatar-mark-64.webp 1x,
+          /avatar-mark-128.webp 2x,
+          /avatar-mark-256.webp 4x
+        "
         alt=""
         width="64"
         height="64"
