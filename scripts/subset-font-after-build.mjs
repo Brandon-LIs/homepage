@@ -49,6 +49,79 @@ const EXTRA =
   "\u300c\u300d\u300e\u300f\u300a\u300b\u3008\u3009\u3010\u3011" +
   "_'\"`~@#$%^&*+=";
 
+/**
+ * 从构建产物里提取「标题字体」真正会用到的文字。
+ *
+ * 只扫标题族元素，不扫整页——因为宋体只用在 h1–h4 和页脚座右铭上
+ * （见 tokens.css 的 --font-display 用法）。之前扫全页，把正文、
+ * 标签、评论区的字也塞进了字体，570 个字形里有 400 多个永远用不上，
+ * 白白多下 58 KB（124 KB → 66 KB）。
+ *
+ * 这里宁可多收一些显示类元素，也不要漏——漏字会导致标题里
+ * 某个字回落成黑体，比多几 KB 严重得多。
+ */
+const TITLE_CLASSES = [
+  "section-title",
+  "project__name",
+  "post__title",
+  "setup__title",
+  "skills__title",
+  "site-footer__motto",
+  "notfound__title",
+  "section-lede",
+  "section-index",
+  "fact__value",
+  "contact__label",
+  "stats__value",
+  "brand__name",
+];
+
+/**
+ * 从 HTML 里抽出标题族元素的文字。
+ *
+ * 这里刻意手写了一个标签栈，而不用正则的 backreference。
+ * 原因：HTML 存在同名标签嵌套（<span> 里套 <span>），
+ * `<(\w+)>(.*?)</\1>` 这类写法会错配，把整段漏掉——
+ * 实测因此抽出 0 个汉字，字体缩到 38 KB 却什么字都没有。
+ *
+ * 手写栈能准确配对，也顺手解决了另一个坑：class 不一定是
+ * 元素的第一个属性（Astro 会生成 <h2 id="..." class="...">），
+ * 所以要在开标签内部找 class，而不是要求 class 打头。
+ */
+function extractTitleText(html) {
+  const parts = [];
+  const stack = [];
+  const re = /<(\/?)([a-z][a-z0-9]*)\b([^>]*?)(\/?)>/gi;
+  let m;
+
+  while ((m = re.exec(html))) {
+    const closing = m[1] === "/";
+    const tag = m[2].toLowerCase();
+    const attrs = m[3] || "";
+    const selfClosing = m[4] === "/" || /^(br|img|input|meta|link|hr|source)$/.test(tag);
+    if (selfClosing) continue;
+
+    if (!closing) {
+      const isHeading = /^h[1-4]$/.test(tag);
+      const cls = (attrs.match(/class="([^"]*)"/) || [])[1];
+      const wantsClass =
+        !!cls && TITLE_CLASSES.some((c) => cls.split(/\s+/).includes(c));
+      stack.push({ tag, want: isHeading || wantsClass, start: re.lastIndex });
+    } else {
+      // 弹出到与闭标签同名的最近一层
+      for (let i = stack.length - 1; i >= 0; i--) {
+        if (stack[i].tag === tag) {
+          if (stack[i].want) parts.push(html.slice(stack[i].start, m.index));
+          stack.length = i;
+          break;
+        }
+      }
+    }
+  }
+
+  return parts.join(" ").replace(/<[^>]+>/g, " ");
+}
+
 /** 从构建产物里提取所有会渲染出来的文字。 */
 async function collectFromDist() {
   const chars = new Set(EXTRA);
@@ -60,14 +133,11 @@ async function collectFromDist() {
         await walk(full);
         continue;
       }
-      if (!/\.(html|json)$/.test(e.name)) continue;
+      if (!/\.html$/.test(e.name)) continue;
 
-      let text = await readFile(full, "utf-8");
-      if (e.name.endsWith(".html")) {
-        // 去掉脚本与样式，只留真正会渲染的文字
-        text = text.replace(/<(script|style)[\s\S]*?<\/\1>/gi, " ");
-        text = text.replace(/<[^>]+>/g, " ");
-      }
+      const html = await readFile(full, "utf-8");
+      // 标题族元素的文字——这是宋体唯一会渲染的内容
+      const text = extractTitleText(html);
       for (const ch of text) chars.add(ch);
     }
   };
@@ -111,7 +181,7 @@ async function main() {
 
   await writeFile(OUT, subset);
   console.log(
-    `✓ 标题字体已按实际内容子集化：` +
+    `✓ 标题字体已按标题用字子集化：` +
       `汉字 ${cjkUsed}，总字符 ${used.size}，` +
       `${(subset.length / 1024).toFixed(1)} KB（字形覆盖已自检）`
   );

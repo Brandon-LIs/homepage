@@ -43,7 +43,7 @@ def encode_wide_and_small(
     """
     encode(img, stem, quality_avif, quality_webp)
     small = img.copy()
-    small.thumbnail((820, 820), Image.LANCZOS)
+    small.thumbnail((680, 680), Image.LANCZOS)
     encode(small, f"{stem}-sm", quality_avif, quality_webp)
 
 
@@ -122,16 +122,16 @@ def main() -> None:
     hero = cover(hero, 16 / 9)
     # 这张会作为大面积氛围层铺在首屏，做一次轻微降噪让渐变更干净
     hero = hero.filter(ImageFilter.GaussianBlur(0.4))
-    hero = hero.resize((1400, 788), Image.LANCZOS)
+    hero = hero.resize((1100, 619), Image.LANCZOS)
     hero = ImageEnhance.Contrast(hero).enhance(1.04)
-    encode_wide_and_small(hero, "screen-glow", quality_avif=42, quality_webp=68)
+    encode_wide_and_small(hero, "screen-glow", quality_avif=38, quality_webp=62)
 
     print("处理亮色纸纹")
     paper = load("paper-light.png")
     paper = cover(paper, 16 / 9)
-    paper = paper.resize((1400, 788), Image.LANCZOS)
+    paper = paper.resize((1100, 619), Image.LANCZOS)
     paper = ImageEnhance.Contrast(paper).enhance(0.92)
-    encode_wide_and_small(paper, "paper", quality_avif=42, quality_webp=68)
+    encode_wide_and_small(paper, "paper", quality_avif=38, quality_webp=62)
 
     print("处理皮影戏台")
     show = load("shadow-play.png")
