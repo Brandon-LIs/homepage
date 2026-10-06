@@ -10,7 +10,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/fetch-posts.mjs || echo '⚠ RSS 抓取失败，沿用已有 posts.json 继续构建' ; astro build && node scripts/build-og.mjs",
+    "build": "node scripts/fetch-posts.mjs || echo '⚠ RSS 抓取失败，沿用已有 posts.json 继续构建' ; astro build && node scripts/subset-font-after-build.mjs && node scripts/build-og.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "lint": "eslint .",
@@ -28,6 +28,8 @@
     "cookie": "^2.0.1",
     "@eslint/js": "^9.0.0",
     "typescript-eslint": "^8.0.0",
-    "@astrojs/check": "^0.9.0"
+    "@astrojs/check": "^0.9.0",
+    "subset-font": "^2.9.0",
+    "fontkit": "^2.0.4"
   }
 }

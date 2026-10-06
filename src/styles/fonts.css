@@ -4,6 +4,20 @@
    - Songti：Noto Serif SC 按页面用字子集化（12 MB → 127 KB），只用于标题
    - Geist / Geist Mono：拉丁可变字体，只用于正文与数字 */
 
+/* 标题字体：由构建脚本按「实际渲染出来的内容」子集化。
+
+   踩过的坑：子集原来在构建前生成，扫描范围是 src/ 源码 + OG 脚本。
+   但博客文章的标题与摘要是构建期从 RSS 抓的，那些字不在源码里——
+   结果页面上 62 个汉字（鼠标垫、贵阳、崩溃、链接……）没有字形，
+   回落成系统字体，同一句话里出现两种字体。
+
+   试过"两级字体 + unicode-range 兜底"，但中文码点是散开的，
+   无法用区间把两级切开，浏览器会把两个文件都下载（785 KB 白费）。
+
+   最终做法：先构建整站，再从生成的 HTML 里提取真正用到的字符，
+   回填一份精确的子集。这样内容怎么变都不会缺字，体积也仍然最小。
+   生成脚本：scripts/subset-font-after-build.mjs */
+
 @font-face {
   font-family: "Songti";
   src: url("/fonts/songti-700.woff2") format("woff2");
@@ -11,8 +25,6 @@
   font-style: normal;
   /* 标题字体直接决定首屏观感，必须尽早拿到，不要等 */
   font-display: swap;
-  unicode-range: U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF,
-    U+FF00-FFEF, U+2000-206F;
 }
 
 @font-face {
