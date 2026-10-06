@@ -367,9 +367,11 @@ const posts = postsData.posts;
 <script>
   import { initReveal } from "@/scripts/reveal";
   import { initDotField } from "@/scripts/dotfield";
+  import { initSiteStats } from "@/scripts/stats";
   import "@/scripts/site";
 
   initReveal();
+  initSiteStats();
 
   // 指针点阵只在桌面精细指针且允许动效时加载。
   // 触屏用户完全不下载这段代码——这也是把它做成动态 import 的原因。

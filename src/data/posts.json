@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-10-06T06:05:19.961Z",
+  "fetchedAt": "2026-10-06T09:29:17.529Z",
   "source": "https://blog.oopss.top/blog/rss.xml",
   "posts": [
     {
@@ -19,7 +19,7 @@
       "cover": "/covers/free-mousepad-by-bc.webp"
     },
     {
-      "title": "生活|贵阳游记",
+      "title": "贵阳游记",
       "href": "https://blog.oopss.top/blog/guiyang-trip",
       "date": "2026-08-31",
       "dateLabel": "2026 年 8 月 31 日",
@@ -27,7 +27,7 @@
       "cover": "/covers/guiyang-trip.webp"
     },
     {
-      "title": "技术|给博客加上AI搜索功能",
+      "title": "给博客加上AI搜索功能",
       "href": "https://blog.oopss.top/blog/tech-add-ai-search-to-blog",
       "date": "2026-08-22",
       "dateLabel": "2026 年 8 月 22 日",

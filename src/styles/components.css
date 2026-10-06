@@ -1086,6 +1086,19 @@
   color: var(--ink-3);
 }
 
+/* 统计放在版权行上方，中间用一条更淡的分隔线，
+   让"多少人来看过"和"版权声明"读起来是两件事。 */
+.site-footer__stats {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+@media (min-width: 900px) {
+  .site-footer__stats {
+    grid-column: 1 / -1;
+  }
+}
+
 .site-footer__bottom p {
   margin: 0;
 }
@@ -1364,3 +1377,78 @@
    项目区末尾的出口
    -------------------------------------------------------------------------- */
 
+
+/* --------------------------------------------------------------------------
+   页脚访问统计
+   目标是"安静地说明这个站有多少人来看过"，不做成显眼的数据看板。
+   -------------------------------------------------------------------------- */
+
+.site-footer__stats {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  /* 数据未就绪或加载失败时不占视觉重量 */
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease-out);
+}
+
+.site-footer__stats[data-state="ready"] {
+  opacity: 1;
+}
+
+/* 统计服务挂了就整块隐藏，不留一个写着"—"的空壳 */
+.site-footer__stats[data-state="failed"] {
+  display: none;
+}
+
+.stats__item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  font-size: var(--fs-xs);
+  color: var(--ink-3);
+}
+
+.stats__icon {
+  align-self: center;
+  color: var(--ink-3);
+  flex-shrink: 0;
+  /* 图标比文字略低一点，视觉重心才和文字对齐 */
+  margin-top: 0.1em;
+}
+
+.stats__label {
+  color: var(--ink-3);
+}
+
+.stats__value {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ink);
+  /* 等宽数字：从占位符变成真实数字时宽度不跳，旁边的单位也不会被推动。
+     用 font-variant-numeric 而不是换等宽字体——数字用正文字体更好看，
+     只需要宽度对齐这一点特性。 */
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  letter-spacing: 0.01em;
+  min-width: 1.5em;
+  text-align: right;
+}
+
+.stats__unit {
+  color: var(--ink-3);
+}
+
+.stats__sep {
+  width: 1px;
+  height: 0.85em;
+  align-self: center;
+  background: var(--line-strong);
+}
+
+@media (max-width: 560px) {
+  .stats__sep {
+    display: none;
+  }
+}

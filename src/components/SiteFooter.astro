@@ -80,6 +80,54 @@ const year = new Date().getFullYear();
       </div>
     </nav>
 
+    {/*
+      访问统计。
+
+      数据来自自建不蒜子（参考 https://dusays.com/posts/771/）。
+      官方脚本用 POST + x-bsz-referer 头请求，按域名分别计数，
+      站点级指标是 site_pv（总访问量）与 site_uv（总访客数）。
+
+      这里复刻它的元素 id 约定（前缀 busuanzi），但自己控制加载时机与样式：
+      脚本滚到页脚才注入，避免为一个页脚数字拖慢首屏。
+      数字位在服务端就渲染成占位符，脚本到达后原地替换，不会造成布局跳动。
+    */}
+    <div class="site-footer__stats" id="site-stats" data-state="idle">
+      <span class="stats__item">
+        <svg class="stats__icon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+          <path
+            d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linejoin="round"></path>
+          <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"
+          ></circle>
+        </svg>
+        <span class="stats__label">总访问量</span>
+        <span class="stats__value" id="busuanzi_site_pv">—</span>
+        <span class="stats__unit">次</span>
+      </span>
+
+      <span class="stats__sep" aria-hidden="true"></span>
+
+      <span class="stats__item">
+        <svg class="stats__icon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+          <path
+            d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
+          <circle cx="12" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="1.8"
+          ></circle>
+        </svg>
+        <span class="stats__label">总访客数</span>
+        <span class="stats__value" id="busuanzi_site_uv">—</span>
+        <span class="stats__unit">人</span>
+      </span>
+    </div>
+
     <div class="site-footer__bottom">
       <p>
         © {year} {SITE.name} · 内容采用{" "}
