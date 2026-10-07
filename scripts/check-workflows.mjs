@@ -66,6 +66,26 @@ function checkFile(name, text) {
     if (/^\s*(?:-\s*)?(?:run|name):\s*["'].*:.*%\{/.test(line)) {
       problems.push(`${name}:${n} 行内字符串同时含冒号与 %{...}，建议改用块标量`);
     }
+
+    // node-version 必须是完整三段版本号。
+    // "22.12" 这类两段写法依赖 setup-node 的模糊匹配，一旦解析不到
+    // 就直接失败并跳过后续全部步骤——我们踩过一次，且当时很难定位：
+    // job 日志需要认证才能下载，网页上只看到"安装 Node 失败"一行。
+    const nv = line.match(/node-version:\s*["']?([0-9.]+)/);
+    if (nv) {
+      const parts = nv[1].split(".");
+      if (parts.length === 2) {
+        problems.push(
+          `${name}:${n} node-version "${nv[1]}" 只有两段。\n` +
+            `      建议写完整版本号（如 "${nv[1]}.0"），避免 setup-node 模糊匹配失败。`
+        );
+      } else if (parts.length === 1) {
+        problems.push(
+          `${name}:${n} node-version "${nv[1]}" 只有一段。\n` +
+            `      建议写完整版本号（如 "${nv[1]}.x.0"）或使用 lts/* 别名。`
+        );
+      }
+    }
   });
 
   // 顶层字段检查（不做完整解析，只看关键行是否存在）
