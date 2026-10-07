@@ -29,11 +29,17 @@ jobs:
 
       - name: 安装 pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 11.11.0
 
       - name: 安装 Node
         uses: actions/setup-node@v4
         with:
-          node-version: "22.12"
+          # 写完整的三段版本号最稳妥。
+          # "22.12" 这类两位写法依赖 setup-node 的模糊匹配，
+          # 一旦解析不到就直接失败、后续步骤全被跳过——我们已经踩过一次。
+          # 22.12.0 在 node-versions 官方清单里确认存在且为 stable。
+          node-version: "22.12.0"
           cache: pnpm
 
       - name: 安装依赖
